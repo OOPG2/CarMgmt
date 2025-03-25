@@ -1,4 +1,4 @@
-﻿id,brand,model,type,car_plate,daily_rental,status,condition,age,seats,mileage
+﻿vehicle_id,brand,model,type,car_plate,daily_rental,status,condition,age,seats,mileage
 1,Suzuki,Swift,Hatchback,ABC0001A,50,Available,Good,7,5,124229
 2,Volkswagen,Golf,Hatchback,ABC0002B,70,Available,Good,5,5,95335
 3,Suzuki,Swift,Hatchback,ABC0003C,110,Available,Dented,1,5,23768
