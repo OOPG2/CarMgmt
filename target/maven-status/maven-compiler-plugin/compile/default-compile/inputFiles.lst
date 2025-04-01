@@ -1,0 +1,9 @@
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/App.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/MainMenu.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/Menus/CustomerMenu.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/Menus/MenuStrategy.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/Menus/StaffMenu.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/Payments/InvoiceRetriever.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/Payments/InvoiceSelector.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/User.java
+/Users/axel/eclipse-workspace/CarMgmt/src/main/java/org/example/CarMgmt/Billing/UserSelection.java
