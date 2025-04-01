@@ -1,1 +1,1 @@
-﻿reservation_id,vehicle_id,status,start_date,end_date,daily_rental,insurance,customer_notes
+﻿reservation_id,user_id,vehicle_id,status,start_date,end_date,daily_rental,insurance,customer_notes
