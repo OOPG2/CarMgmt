@@ -1,25 +1,23 @@
-package org.example.CarMgmt.BeforeLogin;
+package org.example.CarMgmt.menus.preLogin;
 
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
+import com.googlecode.lanterna.gui2.*;
+
+import static org.example.CarMgmt.menus.preLogin.LoginMenu.showLoginMenu;
+import static org.example.CarMgmt.menus.preLogin.createAccountMenu.showCreateAccountMenu;
 
 public class MainMenu {
-	public static void showMainMenu(MultiWindowTextGUI gui) {
+    public static void showMainMenu(MultiWindowTextGUI gui) {
         BasicWindow mainMenuWindow = new BasicWindow("OOP Rentals");
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(1));
 
         Button loginButton = new Button("Login", () -> {
             mainMenuWindow.close();
-            // TODO: show Login window
+            showLoginMenu(gui);
         });
         Button createAccountButton = new Button("Create Account", () -> {
             mainMenuWindow.close();
-            // TODO: show CreateAccount window
+            showCreateAccountMenu(gui);
         });
 
         Button exitButton = new Button("Exit", mainMenuWindow::close);

@@ -6,10 +6,10 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
 import java.io.IOException;
 
-import org.example.CarMgmt.BeforeLogin.*;
+import org.example.CarMgmt.menus.preLogin.MainMenu;
 
 public class App 
-{
+{;
 	public static void main(String[] args) {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         Screen screen = null;
