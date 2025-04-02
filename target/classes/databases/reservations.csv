@@ -1,0 +1,5 @@
+reservation_id,user_id,vehicle_id,status,start_date,end_date,daily_rental,insurance,customer_notes
+1,1,1,Completed,20250319,20250320,"90,91",20,test 1
+2,1,2,Completed,20250326,20250327,"92,93",20,test 2
+3,1,3,Completed,20250319,20250320,"94,95",20,test 3
+4,1,4,Completed,20250327,20250328,"96,97",20,test 4

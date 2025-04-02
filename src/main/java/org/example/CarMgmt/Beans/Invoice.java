@@ -2,9 +2,9 @@ package org.example.CarMgmt.Beans;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class Invoice {
+public class Invoice extends CsvBeans {
 	@CsvBindByName(column = "invoice_id")
-    private String invoice_id;
+    private String id;
 
     @CsvBindByName(column = "status")
     private String status;
@@ -18,11 +18,14 @@ public class Invoice {
     @CsvBindByName(column = "penalty_ids")
     private String penalty_ids;
     
+    @CsvBindByName(column = "total_amount")
+    private String total_amount;
+    
     @CsvBindByName(column = "created_on")
     private String created_on;
     
-    public void setInvoiceId(String invoice_id) {
-    	this.invoice_id = invoice_id;
+    public void setId(String id) {
+    	this.id = id;
     }
     
     public void setStatus(String status) {
@@ -41,12 +44,16 @@ public class Invoice {
     	this.penalty_ids = penalty_ids;
     }
     
+    public void setTotalAmount(String total_amount) {
+    	this.total_amount = total_amount;
+    }
+    
     public void setCreatedOn(String created_on) {
     	this.created_on = created_on;
     }
     
-    public String getInvoiceId() {
-    	return invoice_id;
+    public String getId() {
+    	return id;
     }
     
     public String getStatus() {
@@ -63,6 +70,10 @@ public class Invoice {
     
     public String getPenaltyIds() {
     	return penalty_ids;
+    }
+    
+    public String getTotalAmount() {
+    	return total_amount;
     }
     
     public String getCreatedOn() {

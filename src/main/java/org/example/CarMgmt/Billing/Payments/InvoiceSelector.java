@@ -17,7 +17,7 @@ public class InvoiceSelector {
         panel.setLayoutManager(new GridLayout(1));
     	table = new Table<String>("Invoice No.", "Reservation No.", "Total Amount", "Due");
     	try {
-			new InvoiceRetriever().populateInvoices();
+			new InvoicePopulator().populateInvoices();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
