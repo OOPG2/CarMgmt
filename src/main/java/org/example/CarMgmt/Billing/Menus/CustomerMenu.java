@@ -13,7 +13,7 @@ public class CustomerMenu implements MenuStrategy {
 	public void populateMenuItems() {
 		BasicWindow menuWindow = MainMenu.menuWindow;
 		Panel panel = MainMenu.panel;
-		Button makePaymentsButton = new Button("Make Payments", () -> {
+		Button makePaymentsButton = new Button("View Invoice & Make Payment", () -> {
         	menuWindow.close();
         	new InvoiceSelector().showInvoiceSelector();
             // TODO: show Login window

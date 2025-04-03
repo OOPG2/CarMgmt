@@ -6,7 +6,7 @@ import org.example.CarMgmt.Beans.CsvBeans;
 import org.example.CarMgmt.CsvParser.CsvParser;
 
 public class Retriever<T extends CsvBeans> {
-	private HashMap<String, CsvBeans> hashmap;
+	HashMap<String, CsvBeans> hashmap;
 	private Class<? extends CsvBeans> clazz;
 	
 	public Retriever(Class<? extends CsvBeans> clazz) {
@@ -15,6 +15,8 @@ public class Retriever<T extends CsvBeans> {
 	
 	public void init(String path) {
 		try {
+			System.out.println(clazz);
+			System.out.println(path);
 			CsvParser csvParser = new CsvParser();
 			hashmap = csvParser.csvToHashmap(clazz, path);
 		} catch (Exception e) {
@@ -23,7 +25,7 @@ public class Retriever<T extends CsvBeans> {
 		}
 	}
 	
-	public T retrieveReservationById(String id) {
+	public T retrieveById(String id) {
 		return (T)hashmap.get(id);
 	}
 }

@@ -1,0 +1,47 @@
+package org.example.CarMgmt.Billing.Payments;
+
+import org.example.CarMgmt.Billing.User;
+import org.example.CarMgmt.Billing.UserSelection;
+import org.example.CarMgmt.Helper.OverdueFineCalculator;
+
+import com.googlecode.lanterna.gui2.table.Table;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
+import org.example.CarMgmt.Constants;
+import org.example.CarMgmt.Beans.*;
+
+public class InvoicesRowPopulator {
+	public void populateInvoices() throws Exception {
+		int daysToDueDate = new Constants().getDaysToDueDate();
+		try {
+			InvoiceRetriever invoiceRetriever = new InvoiceRetriever();
+			
+	        User user = UserSelection.user;
+	        Table<String> table = InvoiceSelector.table;
+	        for(Entry<String, CsvBeans> invoice:invoiceRetriever.hashmap.entrySet()) {
+	        	Invoice i = (Invoice)invoice.getValue();
+				if (i.getUserId().equals(user.getUserId().toString()) && i.getStatus().toLowerCase().equals("pending")) {
+					LocalDate date = LocalDate.parse(i.getCreatedOn(), DateTimeFormatter.BASIC_ISO_DATE);
+					LocalDate dueDate = date.plusDays(daysToDueDate);
+					boolean overdue = dueDate.isBefore(LocalDate.now());
+					String formattedDueDate = dueDate.toString() + (overdue ? " !OVERDUE!" : "");
+					Double totalAmount = Double.parseDouble(i.getSubtotal()) + (overdue ? new OverdueFineCalculator().calculateOverdueFine(i.getCreatedOn(), dueDate.format(DateTimeFormatter.BASIC_ISO_DATE)) : 0);
+					table.getTableModel().addRow(i.getId(), i.getReservationId(), String.format("$%.2f", totalAmount), formattedDueDate);
+				}
+			}
+	    } catch (NullPointerException e) {
+	    	e.printStackTrace();
+	    }
+	}
+}
