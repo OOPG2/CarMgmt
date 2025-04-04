@@ -3,7 +3,7 @@ package org.example.CarMgmt.menus.preLogin;
 import com.googlecode.lanterna.gui2.*;
 
 import static org.example.CarMgmt.menus.preLogin.LoginMenu.showLoginMenu;
-import static org.example.CarMgmt.menus.preLogin.createAccountMenu.showCreateAccountMenu;
+import static org.example.CarMgmt.menus.createAccountMenu.showCreateAccountMenu;
 
 public class MainMenu {
     public static void showMainMenu(MultiWindowTextGUI gui) {

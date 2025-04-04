@@ -1,4 +1,4 @@
-﻿user_id,username,type,status,name,phone,email,password
-1,ali,Customer,Active,Ali,91234567,ali@example.com,password
-2,brenda,Staff,Active,Brenda,92345678,brenda@example.com,password
-3,charlie,Admin,Active,Charlie,93456789,charlie@example.com,password
+﻿user_id,username,password,role,membership,name,email,phone,is_banned
+1,ali,password,Customer,1,Ali Alpha,ali@example.com,91234567,false
+2,brenda,staffpass,Staff,0,Brenda Bravo,brenda@example.com,92345678,false
+3,charlie,adminpass,Admin,0,Caesar Charlie,charlie@example.com,93456789,false

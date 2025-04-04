@@ -1,20 +1,28 @@
 package org.example.CarMgmt.objects;
 
+import com.opencsv.bean.CsvBindByName;
+
 public abstract class User {
     private String userId;
     private String username;
     private String password;
+    private String role;
+    private int membership;
     private String name;
     private String email;
-    private String phoneNo;
+    private String phone;
+    private boolean isBanned;
 
-    public User(String userId, String username, String password, String name, String email, String phoneNo) {
+    public User(String userId, String username, String password, String role, int membership, String name, String email, String phone, boolean isBanned) {
         this.userId = userId;
         this.username = username;
         this.password = password;
+        this.role = role;
+        this.membership = membership;
         this.name = name;
         this.email = email;
-        this.phoneNo = phoneNo;
+        this.phone = phone;
+        this.isBanned = isBanned;
     }
 
     public String getUserId() {
@@ -41,6 +49,22 @@ public abstract class User {
         this.password = password;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public int getMembership() {
+        return membership;
+    }
+
+    public void setMembership(int membership) {
+        this.membership = membership;
+    }
+
     public String getName() {
         return name;
     }
@@ -57,11 +81,19 @@ public abstract class User {
         this.email = email;
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public boolean getIsBanned() {
+        return isBanned;
+    }
+
+    public void setIsBanned(boolean isBanned) {
+        this.isBanned = isBanned;
     }
 }
