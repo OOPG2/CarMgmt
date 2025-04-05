@@ -4,10 +4,11 @@ import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.table.Table;
 import org.example.CarMgmt.manager.MenuManager;
 import org.example.CarMgmt.manager.UserManager;
-import org.example.CarMgmt.objects.User;
+import org.example.CarMgmt.objects.Customer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import static org.example.CarMgmt.menus.postLogin.LoggedMenu.showLoggedMenu;
@@ -21,11 +22,11 @@ public class CustomerManagementMenu {
 
         String[] labels = new String[] {"ID", "Name", "Email", "Phone", "Membership", "Status"};
         Table<String> table = new Table<>(labels);
-        Map<String, User> users = UserManager.getUsers().entrySet()
+        Map<String, Customer> users = UserManager.getUsers().entrySet()
                 .parallelStream()
-                .filter(entry -> entry.getValue().getRole().equals("Customer"))
-                .collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
-        for (Map.Entry<String, User> entry : users.entrySet()) {
+                .filter(entry -> entry.getValue() instanceof Customer)
+                .collect(Collectors.toConcurrentMap(Entry::getKey, entry -> (Customer) entry.getValue()));
+        for (Map.Entry<String, Customer> entry : users.entrySet()) {
             table.getTableModel().addRow(
                     entry.getKey(),
                     entry.getValue().getName(),
@@ -39,16 +40,16 @@ public class CustomerManagementMenu {
             List<String> data = table.getTableModel().getRow(table.getSelectedRow());
             showUsersWindow.close();
             MenuManager.setCameFrom("CustomerManagement");
-            showProfileMenu(gui, UserManager.getUserById(data.get(0)));
+            showProfileMenu(gui, UserManager.getUserByID(data.get(0)));
         });
 
         ComboBox<String> filterBox = new ComboBox<>();
         final TextBox searchBox = new TextBox().setTextChangeListener((newText, changedByUserInteraction) -> {
             if (changedByUserInteraction) {
                 if (!newText.isEmpty()) {
-                    Map<String, User> filteredUsers = users.entrySet().parallelStream()
+                    Map<String, Customer> filteredUsers = users.entrySet().parallelStream()
                             .filter(entry -> {
-                                User user = entry.getValue();
+                                Customer user = entry.getValue();
                                 return switch (filterBox.getSelectedItem().toLowerCase()) {
                                     case "id" -> entry.getKey().toLowerCase().contains(newText);
                                     case "name" -> user.getName() != null && user.getName().toLowerCase().contains(newText);
@@ -60,7 +61,7 @@ public class CustomerManagementMenu {
                             .collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
 
                     table.getTableModel().clear();
-                    for (Map.Entry<String, User> entry : filteredUsers.entrySet()) {
+                    for (Map.Entry<String, Customer> entry : filteredUsers.entrySet()) {
                         table.getTableModel().addRow(
                                 entry.getKey(),
                                 entry.getValue().getName(),
@@ -73,7 +74,7 @@ public class CustomerManagementMenu {
                 }
                 else {
                     table.getTableModel().clear();
-                    for (Map.Entry<String, User> entry : users.entrySet()) {
+                    for (Map.Entry<String, Customer> entry : users.entrySet()) {
                         table.getTableModel().addRow(
                                 entry.getKey(),
                                 entry.getValue().getName(),

@@ -7,7 +7,7 @@ import static org.example.CarMgmt.menus.postLogin.Admin.StaffManagementMenu.show
 import static org.example.CarMgmt.menus.postLogin.ProfileMenu.showProfileMenu;
 
 public class MenuManager {
-    private static String cameFrom = null;
+    private static String cameFrom = null; // Mainly for pages of depth 1.
 
     public static void redirect(MultiWindowTextGUI gui) {
         String page = getCameFrom();

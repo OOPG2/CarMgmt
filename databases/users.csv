@@ -1,4 +1,5 @@
-﻿user_id,username,password,role,membership,name,email,phone,is_banned
-1,ali,password,Customer,1,Ali Alpha,ali@example.com,91234567,false
-2,brenda,staffpass,Staff,0,Brenda Bravo,brenda@example.com,92345678,false
-3,charlie,adminpass,Admin,0,Caesar Charlie,charlie@example.com,93456789,false
+﻿user_id,password,role,membership,name,email,phone,is_banned
+ali1,ali,Customer,1,Ali Alpha,ali@example.com,91234567,false
+brenda2,staffpass,Staff,0,Brenda Bravo,brenda@example.com,92345678,false
+charlie3,adminpass,Admin,0,Caesar Charlie,charlie@example.com,93456789,false
+hanif6650,Etlhn!970207,Customer,1,Hanif Suhaimi,hanif_suhaimi@mail.com,87772645,false

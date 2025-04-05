@@ -4,7 +4,7 @@ import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.table.Table;
 import org.example.CarMgmt.manager.MenuManager;
 import org.example.CarMgmt.manager.UserManager;
-import org.example.CarMgmt.objects.User;
+import org.example.CarMgmt.objects.Staff;
 
 import java.util.List;
 import java.util.Map;
@@ -22,11 +22,11 @@ public class StaffManagementMenu {
 
         String[] labels = new String[] {"ID", "Name", "Email", "Phone"};
         Table<String> table = new Table<>(labels);
-        Map<String, User> users = UserManager.getUsers().entrySet()
+        Map<String, Staff> users = UserManager.getUsers().entrySet()
                 .parallelStream()
-                .filter(entry -> entry.getValue().getRole().equals("Staff"))
-                .collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
-        for (Map.Entry<String, User> entry : users.entrySet()) {
+                .filter(entry -> entry.getValue() instanceof Staff)
+                .collect(Collectors.toConcurrentMap(Map.Entry::getKey, entry -> (Staff) entry.getValue()));
+        for (Map.Entry<String, Staff> entry : users.entrySet()) {
             table.getTableModel().addRow(
                     entry.getKey(),
                     entry.getValue().getName(),
@@ -38,16 +38,16 @@ public class StaffManagementMenu {
             List<String> data = table.getTableModel().getRow(table.getSelectedRow());
             showUsersWindow.close();
             MenuManager.setCameFrom("StaffManagement");
-            showProfileMenu(gui, UserManager.getUserById(data.get(0)));
+            showProfileMenu(gui, UserManager.getUserByID(data.get(0)));
         });
 
         ComboBox<String> filterBox = new ComboBox<>();
         final TextBox searchBox = new TextBox().setTextChangeListener((newText, changedByUserInteraction) -> {
             if (changedByUserInteraction) {
                 if (!newText.isEmpty()) {
-                    Map<String, User> filteredUsers = users.entrySet().parallelStream()
+                    Map<String, Staff> filteredUsers = users.entrySet().parallelStream()
                             .filter(entry -> {
-                                User user = entry.getValue();
+                                Staff user = entry.getValue();
                                 return switch (filterBox.getSelectedItem().toLowerCase()) {
                                     case "id" -> entry.getKey().toLowerCase().contains(newText);
                                     case "name" -> user.getName() != null && user.getName().toLowerCase().contains(newText);
@@ -59,7 +59,7 @@ public class StaffManagementMenu {
                             .collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
 
                     table.getTableModel().clear();
-                    for (Map.Entry<String, User> entry : filteredUsers.entrySet()) {
+                    for (Map.Entry<String, Staff> entry : filteredUsers.entrySet()) {
                         table.getTableModel().addRow(
                                 entry.getKey(),
                                 entry.getValue().getName(),
@@ -70,7 +70,7 @@ public class StaffManagementMenu {
                 }
                 else {
                     table.getTableModel().clear();
-                    for (Map.Entry<String, User> entry : users.entrySet()) {
+                    for (Map.Entry<String, Staff> entry : users.entrySet()) {
                         table.getTableModel().addRow(
                                 entry.getKey(),
                                 entry.getValue().getName(),

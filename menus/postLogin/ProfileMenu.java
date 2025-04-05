@@ -6,6 +6,7 @@ import org.example.CarMgmt.helper;
 import org.example.CarMgmt.manager.AuthenticationManager;
 import org.example.CarMgmt.manager.MenuManager;
 import org.example.CarMgmt.manager.UserManager;
+import org.example.CarMgmt.objects.Customer;
 import org.example.CarMgmt.objects.User;
 
 import com.googlecode.lanterna.gui2.*;
@@ -25,8 +26,9 @@ public class ProfileMenu {
         BasicWindow showProfileWindow = new BasicWindow();
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(2));
-        LayoutData textBoxLayout = GridLayout.createHorizontallyFilledLayoutData();
+        LayoutData infoLayout = GridLayout.createHorizontallyFilledLayoutData();
 
+        final Label errorMessageLabel = new Label("");
         Button changePasswordButton;
         if (viewingUser == null) {
             showProfileWindow.setTitle("OOP Rentals - Profile");
@@ -42,25 +44,32 @@ public class ProfileMenu {
             loggedUser = viewingUser;
         }
 
-        Button banCustomerButton = new Button("Ban Customer", () -> {
-            MessageDialogButton dialogResult = new MessageDialogBuilder()
-                    .setTitle("Confirm Ban Customer")
-                    .setText("Are you sure?")
-                    .addButton(MessageDialogButton.No)
-                    .addButton(MessageDialogButton.Yes)
-                    .build()
-                    .showDialog(gui);
+        Button banCustomerButton = new Button("", () -> {
 
-            if (dialogResult.equals(MessageDialogButton.Yes) && viewingUser != null) {
+            try {
+                if (viewingUser instanceof Customer) {
+                    MessageDialogButton dialogResult = new MessageDialogBuilder()
+                            .setTitle(((Customer) viewingUser).getIsBanned() ? "Confirm Ban Customer" : "Confirm Unban Customer")
+                            .setText("Are you sure?")
+                            .addButton(MessageDialogButton.No)
+                            .addButton(MessageDialogButton.Yes)
+                            .build()
+                            .showDialog(gui);
 
-                viewingUser.setIsBanned(true);
+                    if (dialogResult.equals(MessageDialogButton.Yes)) {
+                        ((Customer) viewingUser).setIsBanned(!((Customer) viewingUser).getIsBanned());
 
-                UserManager.updateUser(viewingUser);
-                showProfileWindow.close();
-                if (MenuManager.getCameFrom() != null)
-                    MenuManager.redirect(gui);
-                else
-                    showLoggedMenu(gui);
+                        UserManager.updateUser(viewingUser);
+                        showProfileWindow.close();
+                        helper.flash(gui, String.format("Successfully %s %s!", ((Customer) viewingUser).getIsBanned() ? "banned" : "unbanned", viewingUser.getUserId()), 1500);
+                        if (MenuManager.getCameFrom() != null)
+                            MenuManager.redirect(gui);
+                        else
+                            showLoggedMenu(gui);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         });
 
@@ -86,21 +95,31 @@ public class ProfileMenu {
         TextBox nameBox = new TextBox(loggedUser.getName()).setReadOnly(true);
         TextBox emailBox = new TextBox(loggedUser.getEmail()).setReadOnly(true);
         TextBox phoneBox = new TextBox(loggedUser.getPhone()).setReadOnly(true);
+        Label userIdLabel = new Label(loggedUser.getUserId());
+
+        panel.addComponent(new EmptySpace());
+        panel.addComponent(new EmptySpace());
+
+        panel.addComponent(new Label("User ID: "));
+        panel.addComponent(userIdLabel.setLayoutData(infoLayout));
+
+        panel.addComponent(new EmptySpace());
+        panel.addComponent(new EmptySpace());
 
         panel.addComponent(new Label("Name: "));
-        panel.addComponent(nameBox.setLayoutData(textBoxLayout));
+        panel.addComponent(nameBox.setLayoutData(infoLayout));
 
         panel.addComponent(new EmptySpace());
         panel.addComponent(new EmptySpace());
 
         panel.addComponent(new Label("Email: "));
-        panel.addComponent(emailBox.setLayoutData(textBoxLayout));
+        panel.addComponent(emailBox.setLayoutData(infoLayout));
 
         panel.addComponent(new EmptySpace());
         panel.addComponent(new EmptySpace());
 
         panel.addComponent(new Label("Phone Number: "));
-        panel.addComponent(phoneBox.setLayoutData(textBoxLayout));
+        panel.addComponent(phoneBox.setLayoutData(infoLayout));
 
         User editedUser = loggedUser;
         Button editProfileButton = new Button("Edit Profile");
@@ -127,75 +146,126 @@ public class ProfileMenu {
                 }
             }
             else {
-                if (changePasswordButton != null)
-                    changePasswordButton.setVisible(true);
-                deleteStaffButton.setVisible(true);
-                editingProfile.set(false);
-                showProfileWindow.setTitle("OOP Rentals - Profile");
-                editProfileButton.setLabel("Edit Profile");
                 try {
-                    helper.flash(gui, "Profile saved successfully!", 1000);
-                } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                nameBox.setReadOnly(true);
-                emailBox.setReadOnly(true);
-                phoneBox.setReadOnly(true);
+                    String name = nameBox.getText();
+                    String email = emailBox.getText();
+                    String phone = phoneBox.getText();
 
-                editedUser.setName(nameBox.getText());
-                editedUser.setEmail(emailBox.getText());
-                editedUser.setPhone(phoneBox.getText());
+                    if (name.isEmpty()) {
+                        errorMessageLabel.setText("Name field cannot be empty!");
+                        gui.updateScreen();
+                    }
+                    else if (email.isEmpty()) {
+                        errorMessageLabel.setText("Email field cannot be empty!");
+                        gui.updateScreen();
+                    }
+                    else if (phone.isEmpty()) {
+                        errorMessageLabel.setText("Phone Number field cannot be empty!");
+                        gui.updateScreen();
+                    }
+                    else if (!email.matches(".+@.+\\..+")) {
+                        errorMessageLabel.setText("Email format is incorrect!");
+                        gui.updateScreen();
+                    }
+                    else if (!phone.matches("^[0-9]{8}$")) {
+                        errorMessageLabel.setText("Phone number must be 8 numeric digit (e.g. 87654321)!");
+                        gui.updateScreen();
+                    }
+                    else {
+                        if (changePasswordButton != null)
+                            changePasswordButton.setVisible(true);
+                        deleteStaffButton.setVisible(true);
+                        editingProfile.set(false);
+                        showProfileWindow.setTitle("OOP Rentals - Profile");
+                        editProfileButton.setLabel("Edit Profile");
 
-                UserManager.updateUser(editedUser);
-                if (viewingUser == null)
-                    AuthenticationManager.setLoggedUser(editedUser);
+                        errorMessageLabel.setText("");
+                        helper.flash(gui, "Profile saved successfully!", 1000);
 
-                try {
-                    gui.updateScreen();
-                } catch (IOException e) {
+                        nameBox.setReadOnly(true);
+                        emailBox.setReadOnly(true);
+                        phoneBox.setReadOnly(true);
+
+                        editedUser.setName(nameBox.getText());
+                        editedUser.setEmail(emailBox.getText());
+                        editedUser.setPhone(phoneBox.getText());
+
+                        UserManager.updateUser(editedUser);
+                        if (viewingUser == null)
+                            AuthenticationManager.setLoggedUser(editedUser);
+
+                        gui.updateScreen();
+                    }
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
         });
 
+        User finalLoggedUser = loggedUser;
         Button returnButton = new Button("Go Back", () -> {
-            showProfileWindow.close();
-            if (MenuManager.getCameFrom() != null)
-                MenuManager.redirect(gui);
-            else
-                showLoggedMenu(gui);
+            if (!editingProfile.get()) {
+                showProfileWindow.close();
+                if (MenuManager.getCameFrom() != null)
+                    MenuManager.redirect(gui);
+                else
+                    showLoggedMenu(gui);
+            }
+            else {
+                MessageDialogButton dialogResult = new MessageDialogBuilder()
+                        .setTitle("Leaving Edit Profile")
+                        .setText("Warning: Changes will be unsaved.")
+                        .addButton(MessageDialogButton.No)
+                        .addButton(MessageDialogButton.Yes)
+                        .build()
+                        .showDialog(gui);
+
+                if (dialogResult.equals(MessageDialogButton.Yes)) {
+                    if (changePasswordButton != null)
+                        changePasswordButton.setVisible(true);
+                    deleteStaffButton.setVisible(true);
+                    editingProfile.set(false);
+                    showProfileWindow.setTitle("OOP Rentals - Profile");
+                    editProfileButton.setLabel("Edit Profile");
+
+                    nameBox.setText(finalLoggedUser.getName()).setReadOnly(true);
+                    emailBox.setText(finalLoggedUser.getEmail()).setReadOnly(true);
+                    phoneBox .setText(finalLoggedUser.getPhone()).setReadOnly(true);
+                    userIdLabel.setText(finalLoggedUser.getUserId());
+                }
+            }
         });
 
         panel.addComponent(new EmptySpace());
         panel.addComponent(new EmptySpace());
+        panel.addComponent(errorMessageLabel.setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
         panel.addComponent(new EmptySpace());
         panel.addComponent(new EmptySpace());
 
         if (viewingUser != null) {
-            switch (viewingUser.getRole()) {
-                case "Customer" -> {
-                    panel.addComponent(new EmptySpace());
-                    panel.addComponent(new EmptySpace());
-                    if (viewingUser.getIsBanned())
-                        panel.addComponent(new EmptySpace());
-                    else
-                        panel.addComponent(banCustomerButton);
+        switch (viewingUser.getRole()) {
+            case "Customer" -> {
+                panel.addComponent(new EmptySpace());
+                panel.addComponent(new EmptySpace());
+                if (((Customer) viewingUser).getIsBanned()) {
+                    banCustomerButton.setLabel("Unban Customer");
+                    panel.addComponent(banCustomerButton);
                 }
-                case "Staff" -> {
-                    panel.addComponent(deleteStaffButton);
-                    panel.addComponent(new EmptySpace());
-                    panel.addComponent(editProfileButton);
-                }
-                default -> {
-                    panel.addComponent(new EmptySpace());
-                    panel.addComponent(new EmptySpace());
+                else{
+                    banCustomerButton.setLabel("Ban Customer");
+                    panel.addComponent(banCustomerButton);
                 }
             }
+            case "Staff" -> {
+                panel.addComponent(deleteStaffButton);
+                panel.addComponent(new EmptySpace());
+                panel.addComponent(editProfileButton);
+            }
+            default -> {
+                panel.addComponent(new EmptySpace());
+                panel.addComponent(new EmptySpace());
+            }
         }
-        else {
-            panel.addComponent((changePasswordButton));
-            panel.addComponent(new EmptySpace());
-            panel.addComponent(editProfileButton);
         }
         panel.addComponent(returnButton.setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1)));
 

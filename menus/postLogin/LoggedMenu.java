@@ -20,6 +20,10 @@ public class LoggedMenu {
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(1));
 
+        panel.addComponent(new Label(String.format("Hello %s,\nwhat would you like to do?", loggedUser.getName())));
+
+        panel.addComponent(new EmptySpace());
+
         if (loggedUser instanceof Customer) {
             Button vehiclesButton = new Button("View All Available Vehicles", () -> {
                 showLoggedWindow.close();

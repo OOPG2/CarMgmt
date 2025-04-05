@@ -8,7 +8,6 @@ import org.example.CarMgmt.objects.Admin;
 import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class UserManager {
     private static final String csvFile = System.getProperty("user.dir") + "/src/main/java/org/example/CarMgmt/databases/users.csv";
@@ -33,14 +32,13 @@ public class UserManager {
         }
     }
 
-    public static void createUser(String username, String name, String email, String phone, String role) {
-        if (username != null && name != null && email != null  && phone != null && role != null) {
+    public static void createUser(String userId, String name, String email, String phone, String role) {
+        if (name != null && email != null  && phone != null && role != null) {
             int membership = 0;
             if (role.equals("Customer"))
                 membership = 1;
             String[] userInfo = new String[]{
-                    generateUniqueUuid(),
-                    username,
+                    userId,
                     AuthenticationManager.defaultPassword,
                     role,
                     Integer.toString(membership),
@@ -75,10 +73,10 @@ public class UserManager {
                     continue;
                 String[] values = line.split(",");
                 if (values.length > 0) {
-                    User user = switch (values[3]) {
-                        case "Customer" -> new Customer(values[0], values[1], values[2], values[3], Integer.parseInt(values[4]), values[5], values[6], values[7], Boolean.parseBoolean(values[8]));
-                        case "Staff" -> new Staff(values[0], values[1], values[2], values[3], Integer.parseInt(values[4]), values[5], values[6], values[7], Boolean.parseBoolean(values[8]));
-                        case "Admin" -> new Admin(values[0], values[1], values[2], values[3], Integer.parseInt(values[4]), values[5], values[6], values[7], Boolean.parseBoolean(values[8]));
+                    User user = switch (values[2]) {
+                        case "Customer" -> new Customer(values[0], values[1], values[2], Integer.parseInt(values[3]), values[4], values[5], values[6], Boolean.parseBoolean(values[7]));
+                        case "Staff" -> new Staff(values[0], values[1], values[2], values[4], values[5], values[6]);
+                        case "Admin" -> new Admin(values[0], values[1], values[2], values[4], values[5], values[6]);
                         default -> throw new IllegalStateException("Unexpected value (loadUsers): " + values[3]);
                     };
                     users.put(values[0], user);
@@ -92,7 +90,7 @@ public class UserManager {
         return users;
     }
 
-    public static User getUserById(String userId) {
+    public static User getUserByID(String userId) {
         return getUsers().get(userId);
     }
 
@@ -112,14 +110,13 @@ public class UserManager {
                 if (values.length > 0 && values[0].equals(user.getUserId())) {
                     line = String.join(",",
                             user.getUserId(),
-                            user.getUsername(),
                             user.getPassword(),
                             user.getRole(),
-                            Integer.toString(user.getMembership()),
+                            user instanceof Customer ? Integer.toString(((Customer)user).getMembership()) : "0",
                             user.getName(),
                             user.getEmail(),
                             user.getPhone(),
-                            Boolean.toString(user.getIsBanned())
+                            user instanceof Customer ? Boolean.toString(((Customer)user).getIsBanned()) : "false"
                     );
                     userFound = true;
                 }
@@ -179,15 +176,16 @@ public class UserManager {
         }
     }
 
-    public static String generateUniqueUuid(){
-        String uuid;
+    public static String generateUniqueID(String name){
+        String userId;
         do{
-            uuid = UUID.randomUUID().toString();
-        }while(isUuidExists(uuid));
-        return uuid;
+//            userId = UUID.randomUUID().toString();
+            userId = name + (int)(Math.random() * 10000);
+        }while(isIDExists(userId));
+        return userId;
     }
 
-    public static boolean isUuidExists(String uuid) {
-        return getUsers().containsKey(uuid);
+    public static boolean isIDExists(String userId) {
+        return getUsers().containsKey(userId);
     }
 }

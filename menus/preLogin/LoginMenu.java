@@ -1,5 +1,9 @@
 package org.example.CarMgmt.menus.preLogin;
 
+import com.googlecode.lanterna.gui2.Button;
+import com.googlecode.lanterna.gui2.GridLayout;
+import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.Panel;
 import org.example.CarMgmt.helper;
 import org.example.CarMgmt.manager.AuthenticationManager;
 
@@ -15,20 +19,24 @@ public class LoginMenu {
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(4));
 
-        panel.addComponent(new Label("Username:"));
-        final TextBox usernameBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3)).addTo(panel);
+        final Label userIdLabel = new Label("User ID:");
+        final TextBox userIdBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3));
 
-        panel.addComponent(new Label("Password:"));
-        final TextBox passwordBox = new TextBox().setMask('*').setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3)).addTo(panel);
+        final Label passwordLabel = new Label("Password:");
+        final TextBox passwordBox = new TextBox().setMask('*').setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3));
 
         final Label errorMessageLabel = new Label("");
 
         Button createAccountButton = new Button("Login", () -> {
             try {
-                String username = usernameBox.getText();
+                String userId = userIdBox.getText();
                 String password = passwordBox.getText();
 
-                if (AuthenticationManager.loginUser(username, password)) {
+                if (AuthenticationManager.isUserBanned(userId)) {
+                    errorMessageLabel.setText("User ID is banned!");
+                    gui.updateScreen();
+                }
+                else if (AuthenticationManager.loginUser(userId, password)) {
                     if (password.equals(AuthenticationManager.defaultPassword)) {
                         loginWindow.close();
                         showChangePasswordMenu(gui);
@@ -36,13 +44,13 @@ public class LoginMenu {
                     else {
                         loginWindow.close();
 
-                        helper.flash(gui, String.format("Welcome back, %s!", username), 1500);
+                        helper.flash(gui, String.format("Welcome back, %s!", userId), 1000);
 
                         showLoggedMenu(gui);
                     }
                 }
                 else {
-                    errorMessageLabel.setText("Invalid username/password!");
+                    errorMessageLabel.setText("Invalid user ID/password!");
                     gui.updateScreen();
                 }
             }
@@ -55,6 +63,12 @@ public class LoginMenu {
             loginWindow.close();
             showMainMenu(gui);
         });
+
+        panel.addComponent(userIdLabel);
+        panel.addComponent(userIdBox);
+
+        panel.addComponent(passwordLabel);
+        panel.addComponent(passwordBox);
 
         panel.addComponent(new EmptySpace());
         panel.addComponent(new EmptySpace());

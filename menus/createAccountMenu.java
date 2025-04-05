@@ -19,18 +19,33 @@ public class createAccountMenu {
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(4));
 
+        final Label userIdLabel = new Label("");
         final Label errorMessageLabel = new Label("");
 
         panel.addComponent(new Label("Name:").setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
-        panel.addComponent(new Label("Username:").setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
-
-        final TextBox nameBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)).addTo(panel);
-        final TextBox usernameBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)).addTo(panel);
-
         panel.addComponent(new Label("Email:").setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
+
+        final TextBox nameBox = new TextBox().setTextChangeListener((name, changedByUserInteraction) -> {
+            if (changedByUserInteraction) {
+                String userId = UserManager.generateUniqueID(name.toLowerCase().contains(" ") ? name.toLowerCase().substring(0, name.toLowerCase().indexOf(" ")) : name.toLowerCase());
+                if (!name.isEmpty())
+                    userIdLabel.setText(userId);
+                else
+                    userIdLabel.setText("");
+            }
+        });
+        panel.addComponent(nameBox.setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
+        final TextBox emailBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)).addTo(panel);
+
+        panel.addComponent(new EmptySpace());
+        panel.addComponent(new EmptySpace());
+        panel.addComponent(new EmptySpace());
+        panel.addComponent(new EmptySpace());
+
+        panel.addComponent(new Label("User ID:").setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
         panel.addComponent(new Label("Phone Number:").setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
 
-        final TextBox emailBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)).addTo(panel);
+        panel.addComponent(userIdLabel.setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
         final TextBox phoneBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)).addTo(panel);
 
         Button createAccountButton = new Button("Create");
@@ -38,7 +53,7 @@ public class createAccountMenu {
             createAccountButton.addListener(button -> {
                 try {
                     String name = nameBox.getText();
-                    String username = usernameBox.getText();
+                    String userId = userIdLabel.getText();
                     String email = emailBox.getText();
                     String phone = phoneBox.getText();
 
@@ -46,8 +61,8 @@ public class createAccountMenu {
                         errorMessageLabel.setText("Name field cannot be empty!");
                         gui.updateScreen();
                     }
-                    else if (username.isEmpty()) {
-                        errorMessageLabel.setText("Username field cannot be empty!");
+                    else if (userId.isEmpty()) {
+                        errorMessageLabel.setText("User ID field cannot be empty! System error.");
                         gui.updateScreen();
                     }
                     else if (email.isEmpty()) {
@@ -67,7 +82,7 @@ public class createAccountMenu {
                         gui.updateScreen();
                     }
                     else {
-                        UserManager.createUser(username, name, email, phone, "Customer");
+                        UserManager.createUser(userId, name, email, phone, "Customer");
 
                         createAccountWindow.close();
                         helper.flash(gui, "Account created!", 1500);
@@ -83,7 +98,7 @@ public class createAccountMenu {
             createAccountButton.addListener(button -> {
                 try {
                     String name = nameBox.getText();
-                    String username = usernameBox.getText();
+                    String userId = userIdLabel.getText();
                     String email = emailBox.getText();
                     String phone = phoneBox.getText();
 
@@ -91,8 +106,8 @@ public class createAccountMenu {
                         errorMessageLabel.setText("Name field cannot be empty!");
                         gui.updateScreen();
                     }
-                    else if (username.isEmpty()) {
-                        errorMessageLabel.setText("Username field cannot be empty!");
+                    else if (userId.isEmpty()) {
+                        errorMessageLabel.setText("User ID field cannot be empty! System error.");
                         gui.updateScreen();
                     }
                     else if (email.isEmpty()) {
@@ -112,7 +127,7 @@ public class createAccountMenu {
                         gui.updateScreen();
                     }
                     else {
-                        UserManager.createUser(username, name, email, phone, "Staff");
+                        UserManager.createUser(userId, name, email, phone, "Staff");
 
                         createAccountWindow.close();
                         helper.flash(gui, "Staff created!", 1500);
