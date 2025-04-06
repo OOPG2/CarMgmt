@@ -3,6 +3,7 @@ package org.example.CarMgmt.Rewards;
 import java.util.List;
 
 import org.example.CarMgmt.App;
+import org.example.CarMgmt.Billing.MainMenu;
 import org.example.CarMgmt.Billing.User;
 import org.example.CarMgmt.Billing.UserSelection;
 import org.example.CarMgmt.Billing.Menus.CustomerMenu;
@@ -22,7 +23,7 @@ public class PerksViewer {
 		panel.setLayoutManager(new GridLayout(1));
         Button back = new Button("Back", () -> {
         	menuWindow.close();
-        	new CustomerMenu().populateMenuItems();
+        	MainMenu.showUserSelection();
         });
         panel.addComponent(back);
         User user = UserSelection.user;
@@ -33,6 +34,14 @@ public class PerksViewer {
         	benefits += String.format("- %s\n", b);
         }
         panel.addComponent(new Label(benefits));
+        panel.addComponent(new EmptySpace());
+        Integer points = user.getPoints();
+        panel.addComponent(new Label(String.format("You currently have %d point%s.", points, points > 1 ? "s" : "")));
+        panel.addComponent(new EmptySpace());
+        panel.addComponent(new Label("Upon accumulating 100 points, your points will be automatically\n"
+        		+ "applied as a discount to your next rental"));
+        panel.addComponent(new EmptySpace());
+        panel.addComponent(new Label("* 100 points = $1 off *"));
         menuWindow.setComponent(panel);
         gui.addWindowAndWait(menuWindow);
 	}

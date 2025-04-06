@@ -1,6 +1,7 @@
 package org.example.CarMgmt.Billing.Menus;
 
 import org.example.CarMgmt.Billing.MainMenu;
+import org.example.CarMgmt.Billing.Invoices.ReservationSearch;
 
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Button;
@@ -14,7 +15,7 @@ public class StaffMenu implements MenuStrategy {
 		Panel panel = MainMenu.panel;
 		Button generateInvoiceButton = new Button("Generate Invoice", () -> {
         	menuWindow.close();
-            // TODO: show Login window
+            new ReservationSearch().showReservationSearchForm();
         });
 		panel.addComponent(generateInvoiceButton);
 	}

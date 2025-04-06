@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.example.CarMgmt.Beans.CsvBeans;
 import org.example.CarMgmt.CsvParser.CsvParser;
+import org.example.CarMgmt.Exceptions.*;
 
 public class Retriever<T extends CsvBeans> {
 	HashMap<String, CsvBeans> hashmap;
@@ -25,7 +26,11 @@ public class Retriever<T extends CsvBeans> {
 		return null;
 	}
 	
-	public T retrieveById(String id) {
-		return (T)hashmap.get(id);
+	public T retrieveById(String id) throws RowNotFoundException {
+		if (hashmap.containsKey(id)) {
+			return (T)hashmap.get(id);
+		} else {
+			throw new RowNotFoundException("Row not found");
+		}
 	}
 }
