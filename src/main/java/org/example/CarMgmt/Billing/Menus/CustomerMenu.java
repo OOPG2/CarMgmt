@@ -2,6 +2,7 @@ package org.example.CarMgmt.Billing.Menus;
 
 import org.example.CarMgmt.Billing.MainMenu;
 import org.example.CarMgmt.Billing.Payments.InvoiceSelector;
+import org.example.CarMgmt.Rewards.PerksViewer;
 
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Button;
@@ -20,11 +21,10 @@ public class CustomerMenu implements MenuStrategy {
         });
         Button paymentHistoryButton = new Button("Payment History", () -> {
         	menuWindow.close();
-            // TODO: show CreateAccount window
         });
         Button viewMembershipPerksButton = new Button("View Membership Perks", () -> {
         	menuWindow.close();
-            // TODO: show CreateAccount window
+        	new PerksViewer().showPerks();
         });
         
         panel.addComponent(makePaymentsButton);

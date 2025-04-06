@@ -20,6 +20,8 @@ public class UserSelection {
         Button customerButton = new Button("Customer", () -> {
         	menuWindow.close();
         	user = new User(1, "Customer");
+        	user.setPoints(100);
+        	user.setLifetimePoints(10000);
         	MainMenu.showUserSelection();
         });
         Button staffButton = new Button("Staff", () -> {

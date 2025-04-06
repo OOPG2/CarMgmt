@@ -5,6 +5,9 @@ import org.example.CarMgmt.Constants;
 import org.example.CarMgmt.Beans.Invoice;
 import org.example.CarMgmt.Beans.Penalty;
 import org.example.CarMgmt.Beans.Reservation;
+import org.example.CarMgmt.Billing.Payments.Methods.BankTransfer;
+import org.example.CarMgmt.Billing.Payments.Methods.CreditCard;
+import org.example.CarMgmt.Billing.Payments.Methods.PayNow;
 import org.example.CarMgmt.Helper.TotalRentalCalculator;
 
 import com.googlecode.lanterna.SGR;
@@ -19,6 +22,7 @@ import com.googlecode.lanterna.gui2.table.Table;
 
 public class InvoiceViewer {
 	public static Table<String> table;
+	public Double totalPayable = 100.0;
 	public void showInvoice(Invoice invoice) {
 		Constants constants = new Constants();
 		MultiWindowTextGUI gui = App.gui;
@@ -35,12 +39,15 @@ public class InvoiceViewer {
         paymentMethodsPanel.setLayoutManager(new GridLayout(4));
         Button creditCard = new Button("Credit Card", () -> {
         	menuWindow.close();
+        	new CreditCard().showCreditCardForm(invoice, totalPayable);
         });
         Button payNow = new Button("PayNow", () -> {
         	menuWindow.close();
+        	new PayNow().showPayNowForm(invoice, totalPayable);
         });
         Button bankTransfer = new Button("Bank Transfer", () -> {
         	menuWindow.close();
+        	new BankTransfer().showBankTransferForm(invoice, totalPayable);
         });
         paymentMethodsPanel.addComponent(creditCard);
         paymentMethodsPanel.addComponent(payNow);
@@ -74,7 +81,6 @@ public class InvoiceViewer {
         	}
         }
         // overdue fine
-        
         Double totalOverdueFine = invoice.getTotalOverdueFine();
         Long overdueDays = invoice.getOverdueDays();
         if (totalOverdueFine > 0) {
