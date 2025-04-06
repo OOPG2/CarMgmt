@@ -1,15 +1,14 @@
 package org.example.CarMgmt.Billing.Payments;
-
 import java.util.HashMap;
 
-import org.example.CarMgmt.Beans.CsvBeans;
+import org.example.CarMgmt.Beans.Penalty;
 import org.example.CarMgmt.Beans.Reservation;
 
 public class ReservationRetriever extends Retriever<Reservation> {
-	HashMap<String, CsvBeans> hashmap;
-	
+	public static HashMap<String, Reservation> reservations;
+
 	public ReservationRetriever() {
 		super(Reservation.class);
-		init("databases/reservations.csv");
+		reservations = (HashMap<String, Reservation>) init("databases/reservations.csv");
 	}
 }

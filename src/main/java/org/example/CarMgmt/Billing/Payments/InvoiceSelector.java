@@ -36,7 +36,7 @@ public class InvoiceSelector {
     	table.setSelectAction(() -> {
     		List<String> row = table.getTableModel().getRow(table.getSelectedRow());
     		menuWindow.close();
-    		new InvoiceViewer().showInvoice();
+    		new InvoiceViewer().showInvoice(InvoiceRetriever.invoices.get(row.get(0)));
     	});
     	panel.addComponent(table);
     	menuWindow.setComponent(panel);

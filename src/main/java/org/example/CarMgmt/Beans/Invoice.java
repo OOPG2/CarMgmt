@@ -30,6 +30,10 @@ public class Invoice extends CsvBeans {
     
     /* calculated values */
     private Double gst;
+    
+    private Double total;
+    
+    private Long overdueDays;
  
     private Double total_overdue_fine;
     
@@ -67,6 +71,14 @@ public class Invoice extends CsvBeans {
     
     public void setGST(Double gst) {
     	this.gst = gst;
+    }
+    
+    public void setTotal(Double total) {
+    	this.total = total;
+    }
+    
+    public void setOverdueDays(Long overdueDays) {
+    	this.overdueDays = overdueDays;
     }
 
     public void setTotalOverdueFine(Double total_overdue_fine) {
@@ -107,6 +119,14 @@ public class Invoice extends CsvBeans {
     
     public Double getGST() {
     	return gst;
+    }
+    
+    public Double getTotal() {
+    	return total;
+    }
+    
+    public Long getOverdueDays() {
+    	return overdueDays;
     }
 
     public Double getTotalOverdueFine() {

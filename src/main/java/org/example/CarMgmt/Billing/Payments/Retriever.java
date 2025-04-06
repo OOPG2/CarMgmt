@@ -13,16 +13,16 @@ public class Retriever<T extends CsvBeans> {
 		this.clazz = clazz;
 	}
 	
-	public void init(String path) {
+	public HashMap<String, ? extends CsvBeans> init(String path) {
 		try {
-			System.out.println(clazz);
-			System.out.println(path);
 			CsvParser csvParser = new CsvParser();
 			hashmap = csvParser.csvToHashmap(clazz, path);
+			return hashmap;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	public T retrieveById(String id) {

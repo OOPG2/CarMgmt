@@ -23,20 +23,36 @@ import org.example.CarMgmt.Beans.*;
 
 public class InvoicesRowPopulator {
 	public void populateInvoices() throws Exception {
-		int daysToDueDate = new Constants().getDaysToDueDate();
+		Constants constants = new Constants();
+		int daysToDueDate = constants.getDaysToDueDate();
 		try {
-			InvoiceRetriever invoiceRetriever = new InvoiceRetriever();
+			new InvoiceRetriever();
 			
 	        User user = UserSelection.user;
 	        Table<String> table = InvoiceSelector.table;
-	        for(Entry<String, CsvBeans> invoice:invoiceRetriever.hashmap.entrySet()) {
-	        	Invoice i = (Invoice)invoice.getValue();
+	        for(Entry<String, Invoice> invoice:InvoiceRetriever.invoices.entrySet()) {
+	        	Invoice i = invoice.getValue();
 				if (i.getUserId().equals(user.getUserId().toString()) && i.getStatus().toLowerCase().equals("pending")) {
 					LocalDate date = LocalDate.parse(i.getCreatedOn(), DateTimeFormatter.BASIC_ISO_DATE);
 					LocalDate dueDate = date.plusDays(daysToDueDate);
+					LocalDate today = LocalDate.now();
 					boolean overdue = dueDate.isBefore(LocalDate.now());
-					String formattedDueDate = dueDate.toString() + (overdue ? " !OVERDUE!" : "");
-					Double totalAmount = Double.parseDouble(i.getSubtotal()) + (overdue ? new OverdueFineCalculator().calculateOverdueFine(i.getCreatedOn(), dueDate.format(DateTimeFormatter.BASIC_ISO_DATE)) : 0);
+					String formattedDueDate = dueDate.toString();
+					Double overdueFine = 0.0;
+					Long overdueDays = 0l;
+					if (overdue) {
+						formattedDueDate += " !OVERDUE!";
+						OverdueFineCalculator overdueFineCalculator = new OverdueFineCalculator();
+						overdueFine = overdueFineCalculator.calculateOverdueFine(dueDate.format(DateTimeFormatter.BASIC_ISO_DATE), today.format(DateTimeFormatter.BASIC_ISO_DATE));
+						overdueDays = overdueFineCalculator.getOverdueDays();
+					} 
+					i.setTotalOverdueFine(overdueFine);
+					i.setOverdueDays(overdueDays);
+					Double subtotalInclusiveOverdueFine = Double.parseDouble(i.getSubtotal()) + overdueFine;
+					Double gst = subtotalInclusiveOverdueFine * constants.getGSTRate();
+					Double totalAmount = subtotalInclusiveOverdueFine + gst;
+					i.setGST(gst);
+					i.setTotal(totalAmount);
 					table.getTableModel().addRow(i.getId(), i.getReservationId(), String.format("$%.2f", totalAmount), formattedDueDate);
 				}
 			}
