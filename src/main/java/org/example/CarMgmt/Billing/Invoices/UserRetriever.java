@@ -10,6 +10,7 @@ public class UserRetriever {
 	public UserRetriever() {
 		User cust = new User(1, "Customer");
 		cust.setLifetimePoints(10000);
+		users.put("1", cust);
 	}
 	
 	public User retrieveById(String id) {

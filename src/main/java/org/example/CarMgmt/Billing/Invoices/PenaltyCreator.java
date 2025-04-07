@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.util.List;
 
 import org.example.CarMgmt.App;
+import org.example.CarMgmt.PredefinedPenalties;
 import org.example.CarMgmt.Beans.Penalty;
 
+import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Button;
+import com.googlecode.lanterna.gui2.ComboBox;
+import com.googlecode.lanterna.gui2.EmptySpace;
 import com.googlecode.lanterna.gui2.GridLayout;
+import com.googlecode.lanterna.gui2.Interactable.FocusChangeDirection;
 import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.Panel;
@@ -25,28 +30,42 @@ public class PenaltyCreator {
 		menuWindow.setHints(java.util.Arrays.asList(Window.Hint.CENTERED));
 		Panel panel = new Panel();
 		panel.setLayoutManager(new GridLayout(1));
-		panel.addComponent(new Label("Description"));
-		TextBox descriptionInput = new TextBox(new TerminalSize(30, 1));
-		panel.addComponent(descriptionInput);
-		panel.addComponent(new Label("Amount"));
-		TextBox amountInput = new TextBox();
-		panel.addComponent(amountInput);
+		panel.addComponent(new Label("Description").addStyle(SGR.BOLD));
+		//TextBox descriptionInput = new TextBox(new TerminalSize(30, 1));
+		//panel.addComponent(descriptionInput);
+		ComboBox<String> comboBox = new ComboBox<String>();
+		PredefinedPenalties predefinedPenalties = new PredefinedPenalties();
+		for (String p: predefinedPenalties.getPredefinedPenalties().keySet()) {
+			comboBox.addItem(p);
+		}
+		String initPenalty = comboBox.getText();
+		panel.addComponent(comboBox);
+		panel.addComponent(new EmptySpace());
+		panel.addComponent(new Label("Amount").addStyle(SGR.BOLD));
+		Label amountLabel = new Label(String.format("$%8.2f", PredefinedPenalties.penalties.get(initPenalty)));
+		comboBox.addListener((selectedIndex, previousSelection, changedByUserInteraction) -> {
+			if (selectedIndex != previousSelection) {
+				String selected = comboBox.getItem(selectedIndex);
+				amountLabel.setText(String.format("$%8.2f", PredefinedPenalties.penalties.get(selected)));
+			}
+		});
+		panel.addComponent(amountLabel);
+		panel.addComponent(new EmptySpace());
 		Panel ctaPanel = new Panel();
 		ctaPanel.setLayoutManager(new GridLayout(2));
 		List<Penalty> penalties = InvoiceGenerator.penalties;
 		Button addPenalty = new Button("Add Penalty", () -> {
 			try {
 				Penalty penalty = new Penalty();
-				String description = descriptionInput.getText();
-				String amount = amountInput.getText();
-				Double parsedAmount = Double.parseDouble(amount);
-				penalty.setDescription(description);
-				penalty.setAmount(amount);
+				String selectedPenalty = comboBox.getText();
+				Double amount = PredefinedPenalties.penalties.get(selectedPenalty);
+				penalty.setDescription(selectedPenalty);
+				penalty.setAmount(amount.toString());
 				penalties.add(penalty);
-		    	penaltyTable.getTableModel().addRow(description, String.format("$%.2f", parsedAmount));
+		    	penaltyTable.getTableModel().addRow(selectedPenalty, String.format("$%8.2f", amount));
 				menuWindow.close();
 			} catch (NumberFormatException e) {
-				
+				e.printStackTrace();
 			}
 			});
 		ctaPanel.addComponent(addPenalty);

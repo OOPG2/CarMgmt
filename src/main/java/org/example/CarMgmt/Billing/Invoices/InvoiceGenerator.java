@@ -13,6 +13,7 @@ import org.example.CarMgmt.Billing.Payments.InvoiceRetriever;
 import org.example.CarMgmt.Billing.Payments.InvoiceViewer;
 import org.example.CarMgmt.Billing.Payments.ReservationRetriever;
 import org.example.CarMgmt.Exceptions.RowNotFoundException;
+import org.example.CarMgmt.Helper.TotalRentalCalculator;
 import org.example.CarMgmt.Rewards.TierBenefits;
 
 import com.googlecode.lanterna.SGR;
@@ -45,21 +46,18 @@ public class InvoiceGenerator {
 	    invoiceForm.addComponent(new Label(reservation.getId()));
 	    invoiceForm.addComponent(new EmptySpace());
 	    invoiceForm.addComponent(new EmptySpace());
-	    invoiceForm.addComponent(new Label("Invoice Items").addStyle(SGR.UNDERLINE).addStyle(SGR.BOLD));
+	    invoiceForm.addComponent(new Label("Base Items").addStyle(SGR.UNDERLINE).addStyle(SGR.BOLD));
 	    invoiceForm.addComponent(new EmptySpace());
 	    invoiceForm.addComponent(new Label("Rental"));
-	    
-	    invoiceForm.addComponent(new Label(""));
+	    Double totalRental = new TotalRentalCalculator().calculateRental(reservation.getDailyRental());
+	    invoiceForm.addComponent(new Label(String.format("$%8.2f", totalRental)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
 	    UserRetriever userRetriever = new UserRetriever();
 	    User customer = userRetriever.retrieveById(reservation.getUserId());
 	    System.out.print(customer);
 	    TierBenefits tierBenefits = new TierBenefits(customer.getLifetimePoints());
-	    String insurance = reservation.getInsurance();
-	    if (tierBenefits.freeInsurance()) {
-	    	insurance = "WAIVED";
-	    }
+	    Double insurance = Double.parseDouble(reservation.getInsurance());
 	    invoiceForm.addComponent(new Label("Insurance"));
-	    invoiceForm.addComponent(new Label(insurance));
+	    invoiceForm.addComponent(new Label(String.format("$%8.2f", insurance)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
 	    invoiceForm.addComponent(new EmptySpace());
 	    invoiceForm.addComponent(new EmptySpace());
 	    panel.addComponent(invoiceForm);
@@ -67,7 +65,7 @@ public class InvoiceGenerator {
 	    penaltyForm.setLayoutManager(new GridLayout(1));
 	    Table<String> penaltyTable = new Table<String>("Penalties", "");
 	    String addPenalty = "+ Add Penalty";
-	    penaltyTable.getTableModel().addRow("+ Add Penalty", "");
+	    penaltyTable.getTableModel().addRow(addPenalty, "");
 	    penaltyTable.setSelectAction(() -> {
     		List<String> row = penaltyTable.getTableModel().getRow(penaltyTable.getSelectedRow());
     		if (row.get(0).equals(addPenalty)) {
