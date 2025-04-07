@@ -8,6 +8,7 @@ public class Constants {
 	private String bankRecipient = "OOP Rentals";
 	private String bankName = "OOP Bank";
 	private String bankAccountNo = "123-456-7890";
+	private String csvBasePath = "/Users/axel/eclipse-workspace/CarMgmt/src/main/resources/";
 	
 	public int getDaysToDueDate() {
 		return daysToDueDate;
@@ -35,5 +36,9 @@ public class Constants {
 	
 	public String getBankAccountNo() {
 		return bankAccountNo;
+	}
+	
+	public String getCsvBasePath() {
+		return csvBasePath;
 	}
 }

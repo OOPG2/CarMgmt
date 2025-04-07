@@ -5,6 +5,8 @@ import java.io.IOException;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
+
 import org.example.CarMgmt.Billing.*;
 
 public class App 

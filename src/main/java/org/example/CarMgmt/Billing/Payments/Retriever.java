@@ -2,6 +2,7 @@ package org.example.CarMgmt.Billing.Payments;
 
 import java.util.HashMap;
 
+import org.example.CarMgmt.Constants;
 import org.example.CarMgmt.Beans.CsvBeans;
 import org.example.CarMgmt.CsvParser.CsvParser;
 import org.example.CarMgmt.Exceptions.*;
@@ -15,9 +16,10 @@ public class Retriever<T extends CsvBeans> {
 	}
 	
 	public HashMap<String, ? extends CsvBeans> init(String path) {
+		Constants constants = new Constants();
 		try {
 			CsvParser csvParser = new CsvParser();
-			hashmap = csvParser.csvToHashmap(clazz, path);
+			hashmap = csvParser.csvToHashmap(clazz, constants.getCsvBasePath() + path);
 			return hashmap;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

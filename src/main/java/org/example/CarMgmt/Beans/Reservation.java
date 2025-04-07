@@ -1,33 +1,43 @@
 package org.example.CarMgmt.Beans;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
 
 public class Reservation extends CsvBeans {
-	@CsvBindByName(column = "reservation_id")
+	//@CsvBindByName(column = "reservation_id")
+	@CsvBindByPosition(position = 0)
     private String id;
 	
-	@CsvBindByName(column = "user_id")
+	//@CsvBindByName(column = "user_id")
+	@CsvBindByPosition(position = 1)
     private String user_id;
 	
-	@CsvBindByName(column = "vehicle_id")
+	//@CsvBindByName(column = "vehicle_id")
+	@CsvBindByPosition(position = 2)
     private String vehicle_id;
 	
-	@CsvBindByName(column = "status")
+	//@CsvBindByName(column = "status")
+	@CsvBindByPosition(position = 3)
     private String status;
 	
-	@CsvBindByName(column = "start_date")
+	//@CsvBindByName(column = "start_date")
+	@CsvBindByPosition(position = 4)
     private String start_date;
 	
-	@CsvBindByName(column = "end_date")
+	//@CsvBindByName(column = "end_date")
+	@CsvBindByPosition(position = 5)
     private String end_date;
 	
-	@CsvBindByName(column = "daily_rental")
+	//@CsvBindByName(column = "daily_rental")
+	@CsvBindByPosition(position = 6)
     private String daily_rental;
 	
-	@CsvBindByName(column = "insurance")
+	//@CsvBindByName(column = "insurance")
+	@CsvBindByPosition(position = 7)
     private String insurance;
 	
-	@CsvBindByName(column = "customer_notes")
+	//@CsvBindByName(column = "customer_notes")
+	@CsvBindByPosition(position = 8)
     private String customer_notes;
 	
 	public String getId() {

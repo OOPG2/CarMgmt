@@ -1,41 +1,68 @@
 package org.example.CarMgmt.Beans;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvIgnore;
 
 public class Invoice extends CsvBeans {
-	@CsvBindByName(column = "invoice_id")
+	//@CsvBindByName(column = "invoice_id")
+	@CsvBindByPosition(position = 0)
     private String id;
 
-    @CsvBindByName(column = "status")
+    //@CsvBindByName(column = "status")
+	@CsvBindByPosition(position = 1)
     private String status;
     
-    @CsvBindByName(column = "user_id")
+    //@CsvBindByName(column = "user_id")
+	@CsvBindByPosition(position = 2)
     private String user_id;
     
-    @CsvBindByName(column = "reservation_id")
+    //@CsvBindByName(column = "reservation_id")
+	@CsvBindByPosition(position = 3)
     private String reservation_id;
     
-    @CsvBindByName(column = "penalty_ids")
+    //@CsvBindByName(column = "penalty_ids")
+	@CsvBindByPosition(position = 4)
     private String penalty_ids;
     
-    @CsvBindByName(column = "total_penalties")
+    //@CsvBindByName(column = "total_penalties")
+	@CsvBindByPosition(position = 5)
     private String total_penalties;
     
     // excludes overdue fines
-    @CsvBindByName(column = "subtotal")
+    //@CsvBindByName(column = "subtotal")
+	@CsvBindByPosition(position = 6)
     private String subtotal;
     
-    @CsvBindByName(column = "created_on")
+    //@CsvBindByName(column = "created_on")
+	@CsvBindByPosition(position = 7)
     private String created_on;
     
     /* calculated values */
+	@CsvIgnore
     private Double gst;
     
+	@CsvIgnore
     private Double total;
     
+	@CsvIgnore
     private Long overdueDays;
  
+	@CsvIgnore
     private Double total_overdue_fine;
+	
+	public Invoice() {}
+    
+    public Invoice(String id, String status, String user_id, String reservation_id, String penalty_ids, String total_penalties, String subtotal, String created_on) {
+    	this.id = id;
+    	this.status = status;
+    	this.user_id = user_id;
+    	this.reservation_id = reservation_id;
+    	this.penalty_ids = penalty_ids;
+    	this.total_penalties = total_penalties;
+    	this.subtotal = subtotal;
+    	this.created_on = created_on;
+    }
     
     public void setId(String id) {
     	this.id = id;

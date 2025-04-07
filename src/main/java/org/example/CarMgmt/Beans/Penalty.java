@@ -1,21 +1,22 @@
 package org.example.CarMgmt.Beans;
 
-import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
 
 public class Penalty extends CsvBeans {
-	@CsvBindByName(column = "penalty_id")
+	//@CsvBindByName(column = "penalty_id")
+	@CsvBindByPosition(position = 0)
     private String id;
 
-	@CsvBindByName(column = "reservation_id")
+	//@CsvBindByName(column = "reservation_id")
+	@CsvBindByPosition(position = 1)
     private String reservation_id;
-
-	@CsvBindByName(column = "type")
-   private String type;
 	
-	@CsvBindByName(column = "amount")
+	//@CsvBindByName(column = "amount")
+	@CsvBindByPosition(position = 2)
     private String amount;
 	
-	@CsvBindByName(column = "description")
+	//@CsvBindByName(column = "description")
+	@CsvBindByPosition(position = 3)
     private String description;
 	
 	public String getId() {
@@ -24,10 +25,6 @@ public class Penalty extends CsvBeans {
 	
 	public String getReservationId() {
 		return reservation_id;
-	}
-	
-	public String getType() {
-		return type;
 	}
 	
 	public String getAmount() {
@@ -44,10 +41,6 @@ public class Penalty extends CsvBeans {
 	
 	public void setReservationId(String reservation_id) {
 		this.reservation_id = reservation_id;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
 	}
 	
 	public void setAmount(String amount) {
