@@ -95,6 +95,8 @@ public class InvoiceGenerator {
     		.setText("Invoice created successfully.")
     		.build()
     		.showDialog(gui);
+	    	menuWindow.close();
+	    	new ReservationSearch().showReservationSearchForm();
 	    });
 	    panel.addComponent(new EmptySpace());
 	    panel.addComponent(generateInvoiceBtn);
@@ -113,7 +115,7 @@ public class InvoiceGenerator {
     		penalty.setId(offset.toString());
     		penalty.setReservationId(reservationId);
     		penaltyIds.add(offset.toString());
-    		totalPenalties = Double.parseDouble(penalty.getAmount());
+    		totalPenalties += Double.parseDouble(penalty.getAmount());
     		try {
 				penaltyWriter.writeToCsv(penalty);
 			} catch (Exception e) {

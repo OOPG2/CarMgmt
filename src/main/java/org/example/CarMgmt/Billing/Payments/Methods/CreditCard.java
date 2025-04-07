@@ -2,6 +2,7 @@ package org.example.CarMgmt.Billing.Payments.Methods;
 
 import org.example.CarMgmt.App;
 import org.example.CarMgmt.Beans.Invoice;
+import org.example.CarMgmt.Billing.Payments.InvoiceEditor;
 import org.example.CarMgmt.Billing.Payments.InvoiceSelector;
 import org.example.CarMgmt.Billing.Payments.InvoiceViewer;
 
@@ -30,7 +31,8 @@ public class CreditCard {
         Panel formPanel = new Panel();
         formPanel.setLayoutManager(new GridLayout(2));
         formPanel.addComponent(new Label("Invoice No."));
-        formPanel.addComponent(new Label(invoice.getId()));
+        String invoiceId = invoice.getId();
+        formPanel.addComponent(new Label(invoiceId));
         formPanel.addComponent(new Label("Total Payable"));
         formPanel.addComponent(new Label(String.format("$%.2f", totalPayable)));
         formPanel.addComponent(new EmptySpace());
@@ -50,6 +52,10 @@ public class CreditCard {
     		.setText("Payment Successful")
     		.build()
     		.showDialog(gui);
+        	invoice.setStatus("Completed");
+			InvoiceEditor.modifyRowInCsv(invoiceId, invoice);
+			menuWindow.close();
+			new InvoiceSelector().showInvoiceSelector();
         });
         formPanel.addComponent(pay);
         Button clear = new Button("Clear", () -> {

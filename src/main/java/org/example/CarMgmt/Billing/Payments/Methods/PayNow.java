@@ -3,6 +3,7 @@ package org.example.CarMgmt.Billing.Payments.Methods;
 import org.example.CarMgmt.App;
 import org.example.CarMgmt.Constants;
 import org.example.CarMgmt.Beans.Invoice;
+import org.example.CarMgmt.Billing.Payments.InvoiceEditor;
 import org.example.CarMgmt.Billing.Payments.InvoiceSelector;
 import org.example.CarMgmt.Billing.Payments.InvoiceViewer;
 
@@ -20,6 +21,7 @@ import io.nayuki.qrcodegen.QrCode;
 
 public class PayNow {
 	public void showPayNowForm(Invoice invoice, Double totalPayable) {
+		String invoiceId = invoice.getId();
 		MultiWindowTextGUI gui = App.gui;
 		BasicWindow menuWindow = new BasicWindow(String.format("PayNow Payment"));
 		Panel panel = new Panel();
@@ -35,13 +37,17 @@ public class PayNow {
     		.setText("Payment Successful")
     		.build()
     		.showDialog(gui);
+        	invoice.setStatus("Completed");
+			InvoiceEditor.modifyRowInCsv(invoiceId, invoice);
+			menuWindow.close();
+			new InvoiceSelector().showInvoiceSelector();
         });
         panel.addComponent(transferred);
         Panel formPanel = new Panel();
         Constants constants = new Constants();
         formPanel.setLayoutManager(new GridLayout(2));
         formPanel.addComponent(new Label("Invoice No."));
-        formPanel.addComponent(new Label(invoice.getId()));
+        formPanel.addComponent(new Label(invoiceId));
         formPanel.addComponent(new Label("Total Payable"));
         formPanel.addComponent(new Label(String.format("$%.2f", totalPayable)));
         formPanel.addComponent(new EmptySpace());
@@ -49,7 +55,7 @@ public class PayNow {
         formPanel.addComponent(new Label("PayNow ID (UEN)"));
         formPanel.addComponent(new Label(constants.getUEN()));
         formPanel.addComponent(new Label("Payment Ref."));
-        formPanel.addComponent(new Label(invoice.getId()));
+        formPanel.addComponent(new Label(invoiceId));
         panel.addComponent(formPanel);
         QrCode qr = QrCode.encodeText("00020101021126510009SG.PAYNOW010120210200604393R030110510TAISP FUND52040000530370254091000000.05802SG5902NA6009Singapore62140110TAISP FUND630421A9", QrCode.Ecc.LOW);
         int size = qr.size;
