@@ -1,6 +1,7 @@
 package org.example.CarMgmt.Billing.Menus;
 
 import org.example.CarMgmt.Billing.MainMenu;
+import org.example.CarMgmt.Billing.PaymentHistoryListing;
 import org.example.CarMgmt.Billing.Payments.InvoiceSelector;
 import org.example.CarMgmt.Rewards.PerksViewer;
 
@@ -21,6 +22,7 @@ public class CustomerMenu implements MenuStrategy {
         });
         Button paymentHistoryButton = new Button("Payment History", () -> {
         	menuWindow.close();
+        	PaymentHistoryListing.showPaymentHistoryListing();
         });
         Button viewMembershipPerksButton = new Button("View Membership Perks", () -> {
         	menuWindow.close();

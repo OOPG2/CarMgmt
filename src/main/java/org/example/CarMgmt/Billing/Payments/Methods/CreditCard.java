@@ -1,10 +1,19 @@
 package org.example.CarMgmt.Billing.Payments.Methods;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 import org.example.CarMgmt.App;
 import org.example.CarMgmt.Beans.Invoice;
+import org.example.CarMgmt.Beans.PaymentHistory;
+import org.example.CarMgmt.Billing.UserSelection;
 import org.example.CarMgmt.Billing.Payments.InvoiceEditor;
 import org.example.CarMgmt.Billing.Payments.InvoiceSelector;
 import org.example.CarMgmt.Billing.Payments.InvoiceViewer;
+import org.example.CarMgmt.Billing.Payments.PaymentHistoryRetriever;
+import org.example.CarMgmt.Billing.Payments.PaymentHistoryWriter;
+import org.example.CarMgmt.Billing.Payments.PenaltyRetriever;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.BasicWindow;
@@ -46,14 +55,25 @@ public class CreditCard {
         formPanel.addComponent(new Label("CVV"));
         TextBox cvvInput = new TextBox(new TerminalSize(5, 1), "123");
         formPanel.addComponent(cvvInput);
+        String userId = UserSelection.user.getUserId().toString();
         Button pay = new Button("Pay", () -> {
+        	invoice.setStatus("Completed");
+			InvoiceEditor.modifyRowInCsv(invoiceId, invoice);
+			Integer lastPaymentHistoryId = Integer.parseInt(PaymentHistoryRetriever.currentLastRowId);
+			Integer offset = lastPaymentHistoryId + 1;
+			LocalDateTime currentTime = LocalDateTime.now();
+			PaymentHistory paymentHistory = new PaymentHistory(offset.toString(), invoiceId, userId, String.format("%.2f", totalPayable), "Credit Card", currentTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+			try {
+				new PaymentHistoryWriter().writeToCsv(paymentHistory);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         	new MessageDialogBuilder()
     		.setTitle("")
     		.setText("Payment Successful")
     		.build()
     		.showDialog(gui);
-        	invoice.setStatus("Completed");
-			InvoiceEditor.modifyRowInCsv(invoiceId, invoice);
 			menuWindow.close();
 			new InvoiceSelector().showInvoiceSelector();
         });

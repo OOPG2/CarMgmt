@@ -2,7 +2,7 @@ package org.example.CarMgmt.Beans;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-public class PaymentHistories extends CsvBeans {
+public class PaymentHistory extends CsvBeans {
 	@CsvBindByPosition(position = 0)
     private String id;
 
@@ -10,13 +10,27 @@ public class PaymentHistories extends CsvBeans {
     private String invoice_id;
 	
 	@CsvBindByPosition(position = 2)
-    private String invoice_amount;
+    private String user_id;
 	
 	@CsvBindByPosition(position = 3)
-    private String payment_method;
+    private String invoice_amount;
 	
 	@CsvBindByPosition(position = 4)
+    private String payment_method;
+	
+	@CsvBindByPosition(position = 5)
     private String timestamp;
+	
+	public PaymentHistory() {}
+	
+	public PaymentHistory(String id, String invoice_id, String user_id, String invoice_amount, String payment_method, String timestamp) {
+		this.id = id;
+		this.invoice_id = invoice_id;
+		this.user_id = user_id;
+		this.invoice_amount = invoice_amount;
+		this.payment_method = payment_method;
+		this.timestamp = timestamp;
+	}
 	
 	public String getId() {
 		return id;
@@ -24,6 +38,10 @@ public class PaymentHistories extends CsvBeans {
 	
 	public String getInvoiceId() {
 		return invoice_id;
+	}
+	
+	public String getUserId() {
+		return user_id;
 	}
 	
 	public String getInvoiceAmount() {
@@ -44,6 +62,10 @@ public class PaymentHistories extends CsvBeans {
 	
 	public void setInvoiceId(String invoice_id) {
 		this.invoice_id = invoice_id;
+	}
+	
+	public void setUserId(String user_id) {
+		this.user_id = user_id;
 	}
 	
 	public void setInvoiceAmount(String invoice_amount) {

@@ -1,11 +1,18 @@
 package org.example.CarMgmt.Billing.Payments.Methods;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.example.CarMgmt.App;
 import org.example.CarMgmt.Constants;
 import org.example.CarMgmt.Beans.Invoice;
+import org.example.CarMgmt.Beans.PaymentHistory;
+import org.example.CarMgmt.Billing.UserSelection;
 import org.example.CarMgmt.Billing.Payments.InvoiceEditor;
 import org.example.CarMgmt.Billing.Payments.InvoiceSelector;
 import org.example.CarMgmt.Billing.Payments.InvoiceViewer;
+import org.example.CarMgmt.Billing.Payments.PaymentHistoryRetriever;
+import org.example.CarMgmt.Billing.Payments.PaymentHistoryWriter;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.BasicWindow;
@@ -31,14 +38,25 @@ public class PayNow {
         	new InvoiceViewer().showInvoice(invoice);
         });
         panel.addComponent(back);
+        String userId = UserSelection.user.getUserId().toString();
         Button transferred = new Button("Simulate Payment", () -> {
-        	new MessageDialogBuilder()
+        	invoice.setStatus("Completed");
+			InvoiceEditor.modifyRowInCsv(invoiceId, invoice);
+			Integer lastPaymentHistoryId = Integer.parseInt(PaymentHistoryRetriever.currentLastRowId);
+			Integer offset = lastPaymentHistoryId + 1;
+			LocalDateTime currentTime = LocalDateTime.now();
+			PaymentHistory paymentHistory = new PaymentHistory(offset.toString(), invoiceId, userId, String.format("%.2f", totalPayable), "Credit Card", currentTime.format(DateTimeFormatter.ISO_DATE_TIME));
+			try {
+				new PaymentHistoryWriter().writeToCsv(paymentHistory);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			new MessageDialogBuilder()
     		.setTitle("")
     		.setText("Payment Successful")
     		.build()
     		.showDialog(gui);
-        	invoice.setStatus("Completed");
-			InvoiceEditor.modifyRowInCsv(invoiceId, invoice);
 			menuWindow.close();
 			new InvoiceSelector().showInvoiceSelector();
         });
