@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class ReturnVehicleMenu {
     public static void showMenu(MultiWindowTextGUI gui) {
-        String customerID = "1";
+        String customerID = "3";
         BasicWindow window = new BasicWindow("Vehicle Return");
         Panel panel = new Panel();
         panel.setLayoutManager(new LinearLayout(Direction.VERTICAL));

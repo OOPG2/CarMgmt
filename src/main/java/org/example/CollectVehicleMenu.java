@@ -14,12 +14,13 @@ import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
 public class CollectVehicleMenu {
     public static void showMenu(MultiWindowTextGUI gui) {
-        String customerID = "1";
+        String customerID = "3";
         BasicWindow window = new BasicWindow("Vehicle Collection");
         Panel panel = new Panel();
         panel.setLayoutManager(new LinearLayout(Direction.VERTICAL));
@@ -36,8 +37,8 @@ public class CollectVehicleMenu {
                             ((Reservation) hashmap.get(String.valueOf(k))).getStatus().equals("Confirmed") &&
                             (LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isBefore(LocalDate.now()) ||
                             LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now()))&&
-                            LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isAfter(LocalDate.now()) ||
-                            LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now()))
+                            (LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isAfter(LocalDate.now()) ||
+                            LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now())))
                     .mapToInt(Integer::valueOf)
                     .sorted()
                     .forEach(k-> info.add((Reservation) hashmap.get(String.valueOf(k))));
@@ -95,8 +96,8 @@ public class CollectVehicleMenu {
                                 ((Reservation) hashmap.get(String.valueOf(k))).getStatus().equals("Confirmed") &&
                                 (LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isBefore(LocalDate.now()) ||
                                 LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now()))&&
-                                LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isAfter(LocalDate.now()) ||
-                                LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now()))
+                                (LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isAfter(LocalDate.now()) ||
+                                LocalDate.parse(((Reservation) hashmap.get(String.valueOf(k))).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now())))
                         .mapToInt(Integer::valueOf)
                         .sorted()
                         .forEach(k-> info.add((Reservation) hashmap.get(String.valueOf(k))));
