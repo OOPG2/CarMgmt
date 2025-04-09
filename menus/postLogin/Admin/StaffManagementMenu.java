@@ -2,6 +2,7 @@ package org.example.CarMgmt.menus.postLogin.Admin;
 
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.table.Table;
+import org.example.CarMgmt.App;
 import org.example.CarMgmt.manager.MenuManager;
 import org.example.CarMgmt.manager.UserManager;
 import org.example.CarMgmt.objects.Staff;
@@ -16,13 +17,17 @@ import static org.example.CarMgmt.menus.postLogin.ProfileMenu.showProfileMenu;
 
 public class StaffManagementMenu {
     public static void showStaffManagementMenu(MultiWindowTextGUI gui) {
+        App app = new App();
+
+        UserManager userManager = app.getUserManager();
+
         BasicWindow showUsersWindow = new BasicWindow("OOP Rentals - Staff Users");
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(2));
 
         String[] labels = new String[] {"ID", "Name", "Email", "Phone"};
         Table<String> table = new Table<>(labels);
-        Map<String, Staff> users = UserManager.getUsers().entrySet()
+        Map<String, Staff> users = userManager.getUsers().entrySet()
                 .parallelStream()
                 .filter(entry -> entry.getValue() instanceof Staff)
                 .collect(Collectors.toConcurrentMap(Map.Entry::getKey, entry -> (Staff) entry.getValue()));
@@ -38,7 +43,7 @@ public class StaffManagementMenu {
             List<String> data = table.getTableModel().getRow(table.getSelectedRow());
             showUsersWindow.close();
             MenuManager.setCameFrom("StaffManagement");
-            showProfileMenu(gui, UserManager.getUserByID(data.get(0)));
+            showProfileMenu(gui, userManager.getUserByID(data.get(0)));
         });
 
         ComboBox<String> filterBox = new ComboBox<>();

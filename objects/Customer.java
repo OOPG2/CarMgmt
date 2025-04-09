@@ -1,22 +1,38 @@
 package org.example.CarMgmt.objects;
 
 public class Customer extends User {
-
-    private int membership;
+    private int lifetimePoints;
+    private int loyaltyPoints;
     private boolean isBanned;
 
-    public Customer(String userId, String password, String role, int membership, String name, String email, String phone, boolean isBanned) {
+    public Customer(String userId, String password, String role, String name, String email, String phone, int lifetimePoints, int loyaltyPoints, boolean isBanned) {
         super(userId, password, role, name, email, phone);
-        this.membership = membership;
+        this.lifetimePoints = lifetimePoints;
+        this.loyaltyPoints = loyaltyPoints;
         this.isBanned = isBanned;
     }
 
-    public int getMembership() {
-        return membership;
+    @Override
+    public String[] toCsvRow() {
+        return new String[]{
+                getUserId(), getPassword(), getRole(), getName(), getEmail(), getPhone(), String.valueOf(lifetimePoints), String.valueOf(loyaltyPoints), String.valueOf(isBanned)
+        };
     }
 
-    public void setMembership(int membership) {
-        this.membership = membership;
+    public int getLifetimePoints() {
+        return lifetimePoints;
+    }
+
+    public void setLifetimePoints(int lifetimePoints) {
+        this.lifetimePoints = lifetimePoints;
+    }
+
+    public int getLoyaltyPoints() {
+        return loyaltyPoints;
+    }
+
+    public void setLoyaltyPoints(int loyaltyPoints) {
+        this.loyaltyPoints = loyaltyPoints;
     }
 
     public boolean getIsBanned() {

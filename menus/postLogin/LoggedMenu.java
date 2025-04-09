@@ -1,6 +1,7 @@
 package org.example.CarMgmt.menus.postLogin;
 
 import com.googlecode.lanterna.gui2.*;
+import org.example.CarMgmt.App;
 import org.example.CarMgmt.manager.AuthenticationManager;
 import org.example.CarMgmt.objects.Admin;
 import org.example.CarMgmt.objects.Customer;
@@ -14,7 +15,10 @@ import static org.example.CarMgmt.menus.preLogin.MainMenu.showMainMenu;
 
 public class LoggedMenu {
     public static void showLoggedMenu(MultiWindowTextGUI gui) {
-        User loggedUser = AuthenticationManager.getLoggedUser();
+        App app = new App();
+
+        AuthenticationManager authenticationManager = app.getAuthenticationManager();
+        User loggedUser = authenticationManager.getLoggedUser();
 
         BasicWindow showLoggedWindow = new BasicWindow("OOP Rentals");
         Panel panel = new Panel();
@@ -81,7 +85,7 @@ public class LoggedMenu {
 
         Button logoutButton = new Button("Logout", () -> {
             showLoggedWindow.close();
-            AuthenticationManager.logoutUser();
+            authenticationManager.logoutUser();
 
             showMainMenu(gui);
         });

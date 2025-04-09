@@ -4,47 +4,54 @@ import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.GridLayout;
 import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.Panel;
-import org.example.CarMgmt.helper;
+import org.example.CarMgmt.App;
+import org.example.CarMgmt.Constants;
 import org.example.CarMgmt.manager.AuthenticationManager;
 
 import com.googlecode.lanterna.gui2.*;
 
+import static org.example.CarMgmt.helper.Flash.flash;
 import static org.example.CarMgmt.menus.postLogin.ChangePasswordMenu.showChangePasswordMenu;
 import static org.example.CarMgmt.menus.postLogin.LoggedMenu.showLoggedMenu;
 import static org.example.CarMgmt.menus.preLogin.MainMenu.showMainMenu;
 
 public class LoginMenu {
-    public static void showLoginMenu(MultiWindowTextGUI gui) {
+    public static void showLoginMenu(MultiWindowTextGUI gui, String createdId) {
+        App app = new App();
+
+        AuthenticationManager authenticationManager = app.getAuthenticationManager();
+        Constants constants = app.getConstants();
+
         BasicWindow loginWindow = new BasicWindow("OOP Rentals");
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(4));
 
         final Label userIdLabel = new Label("User ID:");
-        final TextBox userIdBox = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3));
+        final TextBox userIdBox = new TextBox(createdId).setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3));
 
         final Label passwordLabel = new Label("Password:");
-        final TextBox passwordBox = new TextBox().setMask('*').setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3));
+        final TextBox passwordBox = new TextBox("").setMask('*').setLayoutData(GridLayout.createHorizontallyFilledLayoutData(3));
 
         final Label errorMessageLabel = new Label("");
 
-        Button createAccountButton = new Button("Login", () -> {
+        Button loginButton = new Button("Login", () -> {
             try {
                 String userId = userIdBox.getText();
                 String password = passwordBox.getText();
 
-                if (AuthenticationManager.isUserBanned(userId)) {
+                if (authenticationManager.isUserBanned(userId)) {
                     errorMessageLabel.setText("User ID is banned!");
                     gui.updateScreen();
                 }
-                else if (AuthenticationManager.loginUser(userId, password)) {
-                    if (password.equals(AuthenticationManager.defaultPassword)) {
+                else if (authenticationManager.loginUser(userId, password)) {
+                    if (password.equals(constants.getDefaultPassword())) {
                         loginWindow.close();
                         showChangePasswordMenu(gui);
                     }
                     else {
                         loginWindow.close();
 
-                        helper.flash(gui, String.format("Welcome back, %s!", userId), 1000);
+                        flash(gui, String.format("Welcome back, %s!", userId), 1000);
 
                         showLoggedMenu(gui);
                     }
@@ -82,7 +89,7 @@ public class LoginMenu {
         panel.addComponent(new EmptySpace());
         panel.addComponent(new EmptySpace());
 
-        panel.addComponent(createAccountButton.setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
+        panel.addComponent(loginButton.setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
         panel.addComponent(returnButton.setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
 
         loginWindow.setComponent(panel);
