@@ -118,7 +118,7 @@ public class InvoiceGenerator {
 	}
 	
 	public void generateInvoice() {
-		PenaltyRetriever penaltyRetriever = new PenaltyRetriever();
+		new PenaltyRetriever();
 	    Integer lastPenaltyId = Integer.parseInt(PenaltyRetriever.currentLastRowId);
 	    Double totalPenalties = 0.0;
 		List<String> penaltyIds = new ArrayList<>();

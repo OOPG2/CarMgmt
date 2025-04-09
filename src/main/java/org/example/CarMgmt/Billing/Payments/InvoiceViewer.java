@@ -47,7 +47,7 @@ public class InvoiceViewer {
 	        	menuWindow.close();
 	        	new PayNow().showPayNowForm(invoice, totalPayable);
 	        });
-	        Button bankTransfer = new Button("Bank Transfer", () -> {
+	        Button bankTransfer = new Button("Bank Transfer / Pay In-Person", () -> {
 	        	menuWindow.close();
 	        	new BankTransfer().showBankTransferForm(invoice, totalPayable);
 	        });

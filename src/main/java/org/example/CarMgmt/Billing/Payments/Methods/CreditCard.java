@@ -1,5 +1,6 @@
 package org.example.CarMgmt.Billing.Payments.Methods;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -57,12 +58,16 @@ public class CreditCard {
         formPanel.addComponent(cvvInput);
         String userId = UserSelection.user.getUserId().toString();
         Button pay = new Button("Pay", () -> {
+        	LocalDate lockedInDate = LocalDate.now();
+        	invoice.setLockedInAmount(String.format("%.2f", totalPayable));
+        	invoice.setLockedInDate(lockedInDate.format(DateTimeFormatter.ISO_DATE));
         	invoice.setStatus("Completed");
 			InvoiceEditor.modifyRowInCsv(invoiceId, invoice);
+			new PaymentHistoryRetriever();
 			Integer lastPaymentHistoryId = Integer.parseInt(PaymentHistoryRetriever.currentLastRowId);
-			Integer offset = lastPaymentHistoryId + 1;
+			Integer paymentHistoryOffset = lastPaymentHistoryId + 1;
 			LocalDateTime currentTime = LocalDateTime.now();
-			PaymentHistory paymentHistory = new PaymentHistory(offset.toString(), invoiceId, userId, String.format("%.2f", totalPayable), "Credit Card", currentTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+			PaymentHistory paymentHistory = new PaymentHistory(paymentHistoryOffset.toString(), invoiceId, userId, String.format("%.2f", totalPayable), "Credit Card", currentTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 			try {
 				new PaymentHistoryWriter().writeToCsv(paymentHistory);
 			} catch (Exception e) {

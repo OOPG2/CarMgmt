@@ -47,7 +47,7 @@ public class PaymentHistoryListing {
 	    List<PaymentHistory> paymentHistories = new ArrayList<PaymentHistory>(historyHashmap.values());
 	    String userId = UserSelection.user.getUserId().toString();
 	    paymentHistories.stream()
-	    .filter(h -> h.getId().equals(userId))
+	    //.filter(h -> h.getId().equals(userId))
 	    .forEach(h -> {
 	    	historyListingPanel.addComponent(new Label(h.getInvoiceId()));
 	    	historyListingPanel.addComponent(new Label("$" + h.getInvoiceAmount()));

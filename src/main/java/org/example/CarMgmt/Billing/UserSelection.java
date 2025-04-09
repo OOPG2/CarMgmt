@@ -7,6 +7,7 @@ import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.GridLayout;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.Panel;
+import org.example.CarMgmt.Billing.Invoices.UserRetriever;
 
 public class UserSelection {
 	public static User user;
@@ -16,12 +17,10 @@ public class UserSelection {
         BasicWindow menuWindow = new BasicWindow("User Selection");
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(1));
-
+        new UserRetriever(true);
         Button customerButton = new Button("Customer", () -> {
         	menuWindow.close();
         	user = new User(1, "Customer");
-        	user.setLifetimePoints(10000);
-        	user.setPoints(300);
         	MainMenu.showUserSelection();
         });
         Button staffButton = new Button("Staff", () -> {

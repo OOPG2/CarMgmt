@@ -67,11 +67,20 @@ public class InvoiceStatusUpdater {
 		paidViaRadio.setCheckedItemIndex(0);
 		comboBox.addListener((selectedIndex, previousSelection, changedByUserInteraction) -> {
 			if (selectedIndex == 1) {
-				paidViaPanel.addComponent(lockedInAmountDateLabel);
-				paidViaPanel.addComponent(lockedInAmountLabel);
-				paidViaPanel.addComponent(lockedInPaidViaSpacer);
-				paidViaPanel.addComponent(paidViaLabel);
-				paidViaPanel.addComponent(paidViaRadio);
+				if (!lockedInAmount.isEmpty()) {
+					paidViaPanel.addComponent(lockedInAmountDateLabel);
+					paidViaPanel.addComponent(lockedInAmountLabel);
+					paidViaPanel.addComponent(lockedInPaidViaSpacer);
+					paidViaPanel.addComponent(paidViaLabel);
+					paidViaPanel.addComponent(paidViaRadio);
+				} else {
+					comboBox.setSelectedIndex(previousSelection);
+					new MessageDialogBuilder()
+		    		.setTitle("")
+		    		.setText("Customer has not selected their payment method!")
+		    		.build()
+		    		.showDialog(gui);
+				}
 			} else {
 				paidViaPanel.removeComponent(lockedInAmountDateLabel);
 				paidViaPanel.removeComponent(lockedInAmountLabel);
@@ -89,11 +98,12 @@ public class InvoiceStatusUpdater {
 				String selectedStatus = comboBox.getText();
 				invoice.setStatus(selectedStatus);
 				String selectedPaymentMethod = paidViaRadio.getCheckedItem();
+				new PaymentHistoryRetriever();
 				Integer lastPaymentHistoryId = Integer.parseInt(PaymentHistoryRetriever.currentLastRowId);
-				Integer offset = lastPaymentHistoryId + 1;
+				Integer paymentHistoryOffset = lastPaymentHistoryId + 1;
 				LocalDateTime currentTime = LocalDateTime.now();
 				if (selectedStatus.equals("Completed")) {
-					PaymentHistory paymentHistory = new PaymentHistory(offset.toString(), invoiceId, customerId, lockedInAmount, selectedPaymentMethod, currentTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+					PaymentHistory paymentHistory = new PaymentHistory(paymentHistoryOffset.toString(), invoiceId, customerId, lockedInAmount, selectedPaymentMethod, currentTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
 					try {
 						new PaymentHistoryWriter().writeToCsv(paymentHistory);
 					} catch (Exception e) {

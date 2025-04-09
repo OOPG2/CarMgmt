@@ -25,7 +25,7 @@ public class BankTransfer {
 	public void showBankTransferForm(Invoice invoice, Double totalPayable) {
 		String invoiceId = invoice.getId();
 		MultiWindowTextGUI gui = App.gui;
-		BasicWindow menuWindow = new BasicWindow(String.format("Bank Transfer Payment"));
+		BasicWindow menuWindow = new BasicWindow(String.format("Bank Transfer / In-Person Payment"));
 		Panel panel = new Panel();
 		panel.setLayoutManager(new GridLayout(1));
         Button back = new Button("Back", () -> {
@@ -52,7 +52,7 @@ public class BankTransfer {
         formPanel.addComponent(new Label(invoiceId));
         panel.addComponent(formPanel);
         panel.addComponent(new EmptySpace());
-        Button transferred = new Button("I have transferred", () -> {
+        Button transferred = new Button("I have transferred / I am paying in person TODAY", () -> {
         	LocalDate lockedInDate = LocalDate.now();
         	invoice.setLockedInAmount(String.format("%.2f", totalPayable));
         	invoice.setLockedInDate(lockedInDate.format(DateTimeFormatter.ISO_DATE));
@@ -60,7 +60,7 @@ public class BankTransfer {
 			Integer lastPaymentHistoryId = Integer.parseInt(PaymentHistoryRetriever.currentLastRowId);
         	new MessageDialogBuilder()
     		.setTitle("")
-    		.setText("Your payment status will be updated within 3 working days.")
+    		.setText("Your payment status will be updated within 3 working days (for bank transfer)\nor upon in-person payment.")
     		.build()
     		.showDialog(gui);
         	menuWindow.close();
