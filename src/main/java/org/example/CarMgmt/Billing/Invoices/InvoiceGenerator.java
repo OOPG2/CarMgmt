@@ -78,10 +78,10 @@ public class InvoiceGenerator {
 		    invoiceForm.addComponent(new Label("Automatic Points Redemption"));
 		    redeemedDollarAmount = (customerPoints / 100);
 		    if (redeemedDollarAmount > baseTotal) {
-		    	redeemedDollarAmount = (int) ((baseTotal / 100 ) * 100);
+		    	redeemedDollarAmount = (int) ((baseTotal / 100) * 100);
 		    }
 		    pointsDeducted = redeemedDollarAmount * 100;
-		    invoiceForm.addComponent(new Label(String.format("-$%8.2f", redeemedDollarAmount)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
+		    invoiceForm.addComponent(new Label(String.format("-$%5d.00", redeemedDollarAmount)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
 	    }
 	    invoiceForm.addComponent(new EmptySpace());
 	    invoiceForm.addComponent(new EmptySpace());
@@ -140,7 +140,7 @@ public class InvoiceGenerator {
     	InvoiceRetriever invoiceRetriever = new InvoiceRetriever();
     	Integer invoiceId = Integer.parseInt(InvoiceRetriever.currentLastRowId) + 1;
     	Double subtotal = baseTotal + totalPenalties - redeemedDollarAmount;
-    	Invoice invoice = new Invoice(invoiceId.toString(), "Pending", customerId, reservationId, String.join(",", penaltyIds), totalPenalties.toString(), subtotal.toString(), LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE));
+    	Invoice invoice = new Invoice(invoiceId.toString(), "Pending", customerId, reservationId, String.join(",", penaltyIds), totalPenalties.toString(), redeemedDollarAmount.toString(), subtotal.toString(), LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE));
     	try {
     		new InvoiceWriter().writeToCsv(invoice);
     	} catch (Exception e) {

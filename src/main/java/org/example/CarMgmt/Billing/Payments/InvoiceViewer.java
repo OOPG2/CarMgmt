@@ -71,6 +71,12 @@ public class InvoiceViewer {
 	        Double insurance = Double.parseDouble(reservation.getInsurance());
 	        invoiceDetailsPanel.addComponent(new Label("Insurance"));
 	        invoiceDetailsPanel.addComponent(new Label(String.format("%.2f", insurance)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
+	        // redeemed points
+	        Integer redeemedDollarAmount = Integer.parseInt(invoice.getRedeemedDollarAmount());
+	        if (redeemedDollarAmount > 0) {
+	        	invoiceDetailsPanel.addComponent(new Label(String.format("Redeemed %d Points", redeemedDollarAmount*100)));
+		        invoiceDetailsPanel.addComponent(new Label(String.format("-%d.00", redeemedDollarAmount)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
+	        }
 	        // penalties
 	        String penaltyIds = invoice.getPenaltyIds();
 	        if (!penaltyIds.isEmpty()) {

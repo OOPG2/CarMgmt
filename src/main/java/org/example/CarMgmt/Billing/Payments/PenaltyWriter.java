@@ -24,10 +24,11 @@ public class PenaltyWriter {
                     .withQuotechar('\"')
                     .withSeparator(',')
                     .build();
-        	
+        	/*
         	if (fileExists && file.length() > 0) {
         	    writer.write(System.lineSeparator());
         	}
+        	*/
 
             beanToCsv.write(Collections.singletonList(bean));
         }

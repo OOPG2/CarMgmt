@@ -28,20 +28,23 @@ public class Invoice extends CsvBeans {
     //@CsvBindByName(column = "total_penalties")
 	@CsvBindByPosition(position = 5)
     private String total_penalties;
+	
+	@CsvBindByPosition(position = 6)
+    private String redeemed_dollar_amount;
     
     // excludes overdue fines
     //@CsvBindByName(column = "subtotal")
-	@CsvBindByPosition(position = 6)
+	@CsvBindByPosition(position = 7)
     private String subtotal;
     
     //@CsvBindByName(column = "created_on")
-	@CsvBindByPosition(position = 7)
+	@CsvBindByPosition(position = 8)
     private String created_on;
 	
-	@CsvBindByPosition(position = 8)
+	@CsvBindByPosition(position = 9)
     private String locked_in_amount;
 	
-	@CsvBindByPosition(position = 9)
+	@CsvBindByPosition(position = 10)
     private String locked_in_date;
     
     /* calculated values */
@@ -59,13 +62,14 @@ public class Invoice extends CsvBeans {
 	
 	public Invoice() {}
     
-    public Invoice(String id, String status, String user_id, String reservation_id, String penalty_ids, String total_penalties, String subtotal, String created_on) {
+    public Invoice(String id, String status, String user_id, String reservation_id, String penalty_ids, String total_penalties, String redeemed_dollar_amount, String subtotal, String created_on) {
     	this.id = id;
     	this.status = status;
     	this.user_id = user_id;
     	this.reservation_id = reservation_id;
     	this.penalty_ids = penalty_ids;
     	this.total_penalties = total_penalties;
+    	this.redeemed_dollar_amount = redeemed_dollar_amount;
     	this.subtotal = subtotal;
     	this.created_on = created_on;
     }
@@ -92,6 +96,10 @@ public class Invoice extends CsvBeans {
     
     public void setTotalPenalties(String total_penalties) {
     	this.total_penalties = total_penalties;
+    }
+    
+    public void setRedeemedDollarAmount(String redeemed_dollar_amount) {
+    	this.redeemed_dollar_amount = redeemed_dollar_amount;
     }
     
     public void setSubtotal(String subtotal) {
@@ -148,6 +156,10 @@ public class Invoice extends CsvBeans {
     
     public String getTotalPenalties() {
     	return total_penalties;
+    }
+    
+    public String getRedeemedDollarAmount() {
+    	return redeemed_dollar_amount;
     }
     
     public String getSubtotal() {
