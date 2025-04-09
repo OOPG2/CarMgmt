@@ -24,7 +24,7 @@ import com.googlecode.lanterna.gui2.Window;
 import com.googlecode.lanterna.gui2.table.Table;
 
 public class PenaltyCreator {
-	public void showPenaltyCreator(Table<String> penaltyTable) {
+	public void showPenaltyCreator(Table<String> penaltyTable, List<Penalty> penalties) {
 		MultiWindowTextGUI gui = App.gui;
 		BasicWindow menuWindow = new BasicWindow(String.format("Add Penalty"));
 		menuWindow.setHints(java.util.Arrays.asList(Window.Hint.CENTERED));
@@ -53,7 +53,6 @@ public class PenaltyCreator {
 		panel.addComponent(new EmptySpace());
 		Panel ctaPanel = new Panel();
 		ctaPanel.setLayoutManager(new GridLayout(2));
-		List<Penalty> penalties = InvoiceGenerator.penalties;
 		Button addPenalty = new Button("Add Penalty", () -> {
 			try {
 				Penalty penalty = new Penalty();

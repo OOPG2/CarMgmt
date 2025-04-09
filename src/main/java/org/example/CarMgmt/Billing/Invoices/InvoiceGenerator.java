@@ -35,7 +35,7 @@ import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.table.Table;
 
 public class InvoiceGenerator {
-	public static List<Penalty> penalties = new ArrayList<>();
+	public List<Penalty> penalties = new ArrayList<>();
 	String reservationId;
 	String customerId;
 	Double baseTotal = 0.0;
@@ -94,7 +94,7 @@ public class InvoiceGenerator {
 	    penaltyTable.setSelectAction(() -> {
     		List<String> row = penaltyTable.getTableModel().getRow(penaltyTable.getSelectedRow());
     		if (row.get(0).equals(addPenalty)) {
-    			new PenaltyCreator().showPenaltyCreator(penaltyTable);
+    			new PenaltyCreator().showPenaltyCreator(penaltyTable, penalties);
     		} else {
     			
     		}

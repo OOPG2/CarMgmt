@@ -17,10 +17,11 @@ public class UserSelection {
         BasicWindow menuWindow = new BasicWindow("User Selection");
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(1));
+        //TODO: REMOVE WHEN INTEGRATING
         new UserRetriever(true);
         Button customerButton = new Button("Customer", () -> {
         	menuWindow.close();
-        	user = new User(1, "Customer");
+        	user = UserRetriever.users.get("1");
         	MainMenu.showUserSelection();
         });
         Button staffButton = new Button("Staff", () -> {
