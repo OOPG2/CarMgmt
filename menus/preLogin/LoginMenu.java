@@ -9,6 +9,7 @@ import org.example.CarMgmt.Constants;
 import org.example.CarMgmt.manager.AuthenticationManager;
 
 import com.googlecode.lanterna.gui2.*;
+import org.example.CarMgmt.manager.UserManager;
 
 import static org.example.CarMgmt.helper.Flash.flash;
 import static org.example.CarMgmt.menus.postLogin.ChangePasswordMenu.showChangePasswordMenu;
