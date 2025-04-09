@@ -1,8 +1,8 @@
 package org.example.CarMgmt.objects;
 
-import com.opencsv.bean.CsvBindByName;
+import org.example.CarMgmt.interfaces.CSVSerializable;
 
-public abstract class User {
+public abstract class User implements CSVSerializable {
     private String userId;
     private String password;
     private String role;

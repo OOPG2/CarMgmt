@@ -2,13 +2,15 @@ package org.example.CarMgmt.menus.postLogin.Admin;
 
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.table.Table;
+import org.example.CarMgmt.App;
+import org.example.CarMgmt.Constants;
+import org.example.CarMgmt.manager.AuthenticationManager;
 import org.example.CarMgmt.manager.MenuManager;
 import org.example.CarMgmt.manager.UserManager;
 import org.example.CarMgmt.objects.Customer;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import static org.example.CarMgmt.menus.postLogin.LoggedMenu.showLoggedMenu;
@@ -16,23 +18,28 @@ import static org.example.CarMgmt.menus.postLogin.ProfileMenu.showProfileMenu;
 
 public class CustomerManagementMenu {
     public static void showCustomerManagementMenu(MultiWindowTextGUI gui) {
+        App app = new App();
+
+        UserManager userManager = app.getUserManager();
+
         BasicWindow showUsersWindow = new BasicWindow("OOP Rentals - Customer Users");
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(2));
 
-        String[] labels = new String[] {"ID", "Name", "Email", "Phone", "Membership", "Status"};
+        String[] labels = new String[] {"ID", "Name", "Email", "Phone", "Lifetime Points", "Loyalty Points", "Status"};
         Table<String> table = new Table<>(labels);
-        Map<String, Customer> users = UserManager.getUsers().entrySet()
+        Map<String, Customer> users = userManager.getUsers().entrySet()
                 .parallelStream()
                 .filter(entry -> entry.getValue() instanceof Customer)
-                .collect(Collectors.toConcurrentMap(Entry::getKey, entry -> (Customer) entry.getValue()));
+                .collect(Collectors.toConcurrentMap(Map.Entry::getKey, entry -> (Customer) entry.getValue()));
         for (Map.Entry<String, Customer> entry : users.entrySet()) {
             table.getTableModel().addRow(
                     entry.getKey(),
                     entry.getValue().getName(),
                     entry.getValue().getEmail(),
                     entry.getValue().getPhone(),
-                    "Tier " + entry.getValue().getMembership(),
+                    "" + entry.getValue().getLifetimePoints(),
+                    "" + entry.getValue().getLoyaltyPoints(),
                     entry.getValue().getIsBanned() ? "BANNED" : "Active"
             );
         }
@@ -40,7 +47,7 @@ public class CustomerManagementMenu {
             List<String> data = table.getTableModel().getRow(table.getSelectedRow());
             showUsersWindow.close();
             MenuManager.setCameFrom("CustomerManagement");
-            showProfileMenu(gui, UserManager.getUserByID(data.get(0)));
+            showProfileMenu(gui, userManager.getUserByID(data.get(0)));
         });
 
         ComboBox<String> filterBox = new ComboBox<>();
@@ -67,7 +74,8 @@ public class CustomerManagementMenu {
                                 entry.getValue().getName(),
                                 entry.getValue().getEmail(),
                                 entry.getValue().getPhone(),
-                                "Tier " + entry.getValue().getMembership(),
+                                "" + entry.getValue().getLifetimePoints(),
+                                "" + entry.getValue().getLoyaltyPoints(),
                                 entry.getValue().getIsBanned() ? "BANNED" : "Active"
                         );
                     }
@@ -80,7 +88,8 @@ public class CustomerManagementMenu {
                                 entry.getValue().getName(),
                                 entry.getValue().getEmail(),
                                 entry.getValue().getPhone(),
-                                "Tier " + entry.getValue().getMembership(),
+                                "" + entry.getValue().getLifetimePoints(),
+                                "" + entry.getValue().getLoyaltyPoints(),
                                 entry.getValue().getIsBanned() ? "BANNED" : "Active"
                         );
                     }

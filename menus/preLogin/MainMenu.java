@@ -13,7 +13,7 @@ public class MainMenu {
 
         Button loginButton = new Button("Login", () -> {
             mainMenuWindow.close();
-            showLoginMenu(gui);
+            showLoginMenu(gui, "");
         });
         Button createAccountButton = new Button("Create Account", () -> {
             mainMenuWindow.close();

@@ -1,6 +1,8 @@
 package org.example.CarMgmt.menus;
 
-import org.example.CarMgmt.helper;
+import org.example.CarMgmt.App;
+import org.example.CarMgmt.Constants;
+import org.example.CarMgmt.helper.IDGenerator;
 import org.example.CarMgmt.manager.AuthenticationManager;
 import org.example.CarMgmt.manager.MenuManager;
 import org.example.CarMgmt.manager.UserManager;
@@ -8,12 +10,18 @@ import org.example.CarMgmt.manager.UserManager;
 import com.googlecode.lanterna.gui2.*;
 import org.example.CarMgmt.objects.User;
 
+import static org.example.CarMgmt.helper.Flash.flash;
 import static org.example.CarMgmt.menus.postLogin.Admin.StaffManagementMenu.showStaffManagementMenu;
+import static org.example.CarMgmt.menus.preLogin.LoginMenu.showLoginMenu;
 import static org.example.CarMgmt.menus.preLogin.MainMenu.showMainMenu;
 
 public class createAccountMenu {
     public static void showCreateAccountMenu(MultiWindowTextGUI gui) {
-        User loggedUser = AuthenticationManager.getLoggedUser();
+        App app = new App();
+
+        UserManager userManager = app.getUserManager();
+        AuthenticationManager authenticationManager = app.getAuthenticationManager();
+        User loggedUser = authenticationManager.getLoggedUser();
 
         BasicWindow createAccountWindow = new BasicWindow("OOP Rentals - Create Account");
         Panel panel = new Panel();
@@ -27,7 +35,11 @@ public class createAccountMenu {
 
         final TextBox nameBox = new TextBox().setTextChangeListener((name, changedByUserInteraction) -> {
             if (changedByUserInteraction) {
-                String userId = UserManager.generateUniqueID(name.toLowerCase().contains(" ") ? name.toLowerCase().substring(0, name.toLowerCase().indexOf(" ")) : name.toLowerCase());
+                String userId;
+                do {
+                    userId = IDGenerator.generateUniqueID(name.toLowerCase().contains(" ") ? name.toLowerCase().substring(0, name.toLowerCase().indexOf(" ")) : name.toLowerCase());
+                }
+                while (userManager.getUserByID(userId) != null);
                 if (!name.isEmpty())
                     userIdLabel.setText(userId);
                 else
@@ -82,11 +94,11 @@ public class createAccountMenu {
                         gui.updateScreen();
                     }
                     else {
-                        UserManager.createUser(userId, name, email, phone, "Customer");
+                        userManager.createUser(userId, name, email, phone, "Customer");
 
                         createAccountWindow.close();
-                        helper.flash(gui, "Account created!", 1500);
-                        showMainMenu(gui);
+                        flash(gui, String.format("Account '%s' created!", userId), 1500);
+                        showLoginMenu(gui, userId);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -127,10 +139,10 @@ public class createAccountMenu {
                         gui.updateScreen();
                     }
                     else {
-                        UserManager.createUser(userId, name, email, phone, "Staff");
+                        userManager.createUser(userId, name, email, phone, "Staff");
 
                         createAccountWindow.close();
-                        helper.flash(gui, "Staff created!", 1500);
+                        flash(gui, String.format("Staff '%s' created!", userId), 1500);
                         showStaffManagementMenu(gui);
                     }
                 } catch (Exception e) {

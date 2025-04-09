@@ -2,7 +2,8 @@ package org.example.CarMgmt.menus.postLogin;
 
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
-import org.example.CarMgmt.helper;
+import org.example.CarMgmt.App;
+import org.example.CarMgmt.Constants;
 import org.example.CarMgmt.manager.AuthenticationManager;
 import org.example.CarMgmt.manager.MenuManager;
 import org.example.CarMgmt.manager.UserManager;
@@ -14,13 +15,18 @@ import com.googlecode.lanterna.gui2.*;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.example.CarMgmt.helper.Flash.flash;
 import static org.example.CarMgmt.menus.postLogin.ChangePasswordMenu.showChangePasswordMenu;
 import static org.example.CarMgmt.menus.postLogin.LoggedMenu.showLoggedMenu;
 
 public class ProfileMenu {
 
     public static void showProfileMenu(MultiWindowTextGUI gui, User viewingUser) {
-        User loggedUser = AuthenticationManager.getLoggedUser();
+        App app = new App();
+
+        UserManager userManager = app.getUserManager();
+        AuthenticationManager authenticationManager = app.getAuthenticationManager();
+        User loggedUser = authenticationManager.getLoggedUser();
         AtomicBoolean editingProfile = new AtomicBoolean(false);
 
         BasicWindow showProfileWindow = new BasicWindow();
@@ -49,7 +55,7 @@ public class ProfileMenu {
             try {
                 if (viewingUser instanceof Customer) {
                     MessageDialogButton dialogResult = new MessageDialogBuilder()
-                            .setTitle(((Customer) viewingUser).getIsBanned() ? "Confirm Ban Customer" : "Confirm Unban Customer")
+                            .setTitle(((Customer) viewingUser).getIsBanned() ? "Confirm Unban Customer" : "Confirm Ban Customer")
                             .setText("Are you sure?")
                             .addButton(MessageDialogButton.No)
                             .addButton(MessageDialogButton.Yes)
@@ -59,9 +65,9 @@ public class ProfileMenu {
                     if (dialogResult.equals(MessageDialogButton.Yes)) {
                         ((Customer) viewingUser).setIsBanned(!((Customer) viewingUser).getIsBanned());
 
-                        UserManager.updateUser(viewingUser);
+                        userManager.updateUser(viewingUser);
                         showProfileWindow.close();
-                        helper.flash(gui, String.format("Successfully %s %s!", ((Customer) viewingUser).getIsBanned() ? "banned" : "unbanned", viewingUser.getUserId()), 1500);
+                        flash(gui, String.format("Successfully %s %s!", ((Customer) viewingUser).getIsBanned() ? "banned" : "unbanned", viewingUser.getUserId()), 1500);
                         if (MenuManager.getCameFrom() != null)
                             MenuManager.redirect(gui);
                         else
@@ -74,21 +80,26 @@ public class ProfileMenu {
         });
 
         Button deleteStaffButton = new Button("Delete Staff", () -> {
-            MessageDialogButton dialogResult = new MessageDialogBuilder()
-                    .setTitle("Confirm Delete Staff")
-                    .setText("Warning: This action is irreversible!")
-                    .addButton(MessageDialogButton.No)
-                    .addButton(MessageDialogButton.Yes)
-                    .build()
-                    .showDialog(gui);
+            try {
+                MessageDialogButton dialogResult = new MessageDialogBuilder()
+                        .setTitle("Confirm Delete Staff")
+                        .setText("Warning: This action is irreversible!")
+                        .addButton(MessageDialogButton.No)
+                        .addButton(MessageDialogButton.Yes)
+                        .build()
+                        .showDialog(gui);
 
-            if (dialogResult.equals(MessageDialogButton.Yes) && viewingUser != null) {
-                UserManager.deleteUser(viewingUser.getUserId());
-                showProfileWindow.close();
-                if (MenuManager.getCameFrom() != null)
-                    MenuManager.redirect(gui);
-                else
-                    showLoggedMenu(gui);
+                if (dialogResult.equals(MessageDialogButton.Yes) && viewingUser != null) {
+                    userManager.deleteUser(viewingUser.getUserId());
+                    showProfileWindow.close();
+                    flash(gui, String.format("Successfully deleted %s!", viewingUser.getUserId()), 1500);
+                    if (MenuManager.getCameFrom() != null)
+                        MenuManager.redirect(gui);
+                    else
+                        showLoggedMenu(gui);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         });
 
@@ -132,7 +143,7 @@ public class ProfileMenu {
                 showProfileWindow.setTitle("OOP Rentals - Editing Profile");
                 editProfileButton.setLabel("Save Changes");
                 try {
-                    helper.flash(gui, "Edit Profile Mode", 1000);
+                    flash(gui, "Edit Profile Mode", 1000);
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -180,7 +191,7 @@ public class ProfileMenu {
                         editProfileButton.setLabel("Edit Profile");
 
                         errorMessageLabel.setText("");
-                        helper.flash(gui, "Profile saved successfully!", 1000);
+                        flash(gui, "Profile saved successfully!", 1000);
 
                         nameBox.setReadOnly(true);
                         emailBox.setReadOnly(true);
@@ -190,9 +201,9 @@ public class ProfileMenu {
                         editedUser.setEmail(emailBox.getText());
                         editedUser.setPhone(phoneBox.getText());
 
-                        UserManager.updateUser(editedUser);
+                        userManager.updateUser(editedUser);
                         if (viewingUser == null)
-                            AuthenticationManager.setLoggedUser(editedUser);
+                            authenticationManager.setLoggedUser(editedUser);
 
                         gui.updateScreen();
                     }
@@ -243,29 +254,34 @@ public class ProfileMenu {
         panel.addComponent(new EmptySpace());
 
         if (viewingUser != null) {
-        switch (viewingUser.getRole()) {
-            case "Customer" -> {
-                panel.addComponent(new EmptySpace());
-                panel.addComponent(new EmptySpace());
-                if (((Customer) viewingUser).getIsBanned()) {
-                    banCustomerButton.setLabel("Unban Customer");
-                    panel.addComponent(banCustomerButton);
+            switch (viewingUser.getRole()) {
+                case "Customer" -> {
+                    panel.addComponent(new EmptySpace());
+                    panel.addComponent(new EmptySpace());
+                    if (((Customer) viewingUser).getIsBanned()) {
+                        banCustomerButton.setLabel("Unban Customer");
+                        panel.addComponent(banCustomerButton);
+                    }
+                    else{
+                        banCustomerButton.setLabel("Ban Customer");
+                        panel.addComponent(banCustomerButton);
+                    }
                 }
-                else{
-                    banCustomerButton.setLabel("Ban Customer");
-                    panel.addComponent(banCustomerButton);
+                case "Staff" -> {
+                    panel.addComponent(deleteStaffButton);
+                    panel.addComponent(new EmptySpace());
+                    panel.addComponent(editProfileButton);
                 }
-            }
-            case "Staff" -> {
-                panel.addComponent(deleteStaffButton);
-                panel.addComponent(new EmptySpace());
-                panel.addComponent(editProfileButton);
-            }
-            default -> {
-                panel.addComponent(new EmptySpace());
-                panel.addComponent(new EmptySpace());
+                default -> {
+                    panel.addComponent(new EmptySpace());
+                    panel.addComponent(new EmptySpace());
+                }
             }
         }
+        else {
+            panel.addComponent(changePasswordButton);
+            panel.addComponent(new EmptySpace());
+            panel.addComponent(editProfileButton);
         }
         panel.addComponent(returnButton.setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1)));
 
