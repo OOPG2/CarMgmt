@@ -41,7 +41,7 @@ public class PaymentHistoryListing {
 	    historyListingPanel.addComponent(new Label("Invoice No.").addStyle(SGR.BOLD));
 	    historyListingPanel.addComponent(new Label("Amount").addStyle(SGR.BOLD));
 	    historyListingPanel.addComponent(new Label("Payment Method").addStyle(SGR.BOLD));
-	    historyListingPanel.addComponent(new Label("Paid on").addStyle(SGR.BOLD));
+	    historyListingPanel.addComponent(new Label("Confirmed At").addStyle(SGR.BOLD));
 	    new PaymentHistoryRetriever();
 	    HashMap<String, PaymentHistory> historyHashmap = PaymentHistoryRetriever.paymentHistories;
 	    List<PaymentHistory> paymentHistories = new ArrayList<PaymentHistory>(historyHashmap.values());

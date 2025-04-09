@@ -39,6 +39,10 @@ public class InvoiceGenerator {
 	String reservationId;
 	String customerId;
 	Double baseTotal = 0.0;
+	Integer redeemedDollarAmount = 0;
+	Integer pointsDeducted = 0;
+	User customer;
+	Integer customerPoints = 0;
 	public static BasicWindow menuWindow = new BasicWindow(String.format("Generate Invoice"));
 	public void showInvoiceGenerator(Reservation reservation) {
 		MultiWindowTextGUI gui = App.gui;
@@ -61,15 +65,24 @@ public class InvoiceGenerator {
 	    invoiceForm.addComponent(new Label("Rental"));
 	    Double totalRental = new TotalRentalCalculator().calculateRental(reservation.getDailyRental());
 	    baseTotal += totalRental;
-	    invoiceForm.addComponent(new Label(String.format("$%8.2f", totalRental)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
+	    invoiceForm.addComponent(new Label(String.format(" $%8.2f", totalRental)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
 	    UserRetriever userRetriever = new UserRetriever();
 	    customerId = reservation.getUserId();
-	    //User customer = userRetriever.retrieveById(customerId);
-	    //TierBenefits tierBenefits = new TierBenefits(customer.getLifetimePoints());
+	    customer = userRetriever.retrieveById(customerId);
+	    customerPoints = customer.getPoints();
 	    Double insurance = Double.parseDouble(reservation.getInsurance());
 	    baseTotal += insurance;
 	    invoiceForm.addComponent(new Label("Insurance"));
 	    invoiceForm.addComponent(new Label(String.format("$%8.2f", insurance)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
+	    if (customerPoints >= 100) {
+		    invoiceForm.addComponent(new Label("Automatic Points Redemption"));
+		    redeemedDollarAmount = (customerPoints / 100);
+		    if (redeemedDollarAmount > baseTotal) {
+		    	redeemedDollarAmount = (int) ((baseTotal / 100 ) * 100);
+		    }
+		    pointsDeducted = redeemedDollarAmount * 100;
+		    invoiceForm.addComponent(new Label(String.format("-$%8.2f", redeemedDollarAmount)).setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
+	    }
 	    invoiceForm.addComponent(new EmptySpace());
 	    invoiceForm.addComponent(new EmptySpace());
 	    panel.addComponent(invoiceForm);
@@ -126,12 +139,16 @@ public class InvoiceGenerator {
     	}
     	InvoiceRetriever invoiceRetriever = new InvoiceRetriever();
     	Integer invoiceId = Integer.parseInt(InvoiceRetriever.currentLastRowId) + 1;
-    	Double subtotal = baseTotal + totalPenalties;
+    	Double subtotal = baseTotal + totalPenalties - redeemedDollarAmount;
     	Invoice invoice = new Invoice(invoiceId.toString(), "Pending", customerId, reservationId, String.join(",", penaltyIds), totalPenalties.toString(), subtotal.toString(), LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE));
     	try {
     		new InvoiceWriter().writeToCsv(invoice);
     	} catch (Exception e) {
     		e.printStackTrace();
+    	}
+    	if (pointsDeducted > 0) {
+    		customer.setPoints(customerPoints - pointsDeducted);
+    		UserRetriever.users.put(customerId, customer);
     	}
 	}
 }

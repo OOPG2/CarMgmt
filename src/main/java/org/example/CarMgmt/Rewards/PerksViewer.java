@@ -38,8 +38,8 @@ public class PerksViewer {
         Integer points = user.getPoints();
         panel.addComponent(new Label(String.format("You currently have %d point%s.", points, points > 1 ? "s" : "")));
         panel.addComponent(new EmptySpace());
-        panel.addComponent(new Label("Upon accumulating 100 points, your points will be automatically\n"
-        		+ "applied as a discount to your next rental"));
+        panel.addComponent(new Label("Upon accumulating 100 points, your points (in increments of 100)\n"
+        		+ "will be automatically applied as a discount to your next invoice."));
         panel.addComponent(new EmptySpace());
         panel.addComponent(new Label("* 100 points = $1 off *"));
         menuWindow.setComponent(panel);

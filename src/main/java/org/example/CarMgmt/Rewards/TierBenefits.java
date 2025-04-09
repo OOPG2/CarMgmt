@@ -7,6 +7,7 @@ public class TierBenefits {
 	private Integer lifetimePoints;
 	private String tier = "CLASSIC";
 	private List<String> benefits = new ArrayList<>();
+	private boolean prioritySupport = false;
 	private boolean waivedCancellationFees = false;
 	private boolean roadsideAssistance = false;
 	private boolean freeInsurance = false;
@@ -18,10 +19,15 @@ public class TierBenefits {
 	}
 	
 	private void init() {
-		if (lifetimePoints >= 2000) {
-			tier = "SILVER";
+		if (lifetimePoints >= 0) {
+			tier = "CLASSIC";
 			roadsideAssistance = true;
 			benefits.add("24/7 Roadside Assistance");
+		} 
+		if (lifetimePoints >= 2000) {
+			tier = "SILVER";
+			prioritySupport = true;
+			benefits.add("Priority Support");
 		} 
 		if (lifetimePoints >= 4000) {
 			tier = "GOLD";
@@ -39,6 +45,10 @@ public class TierBenefits {
 	
 	public String getTier() {
 		return tier;
+	}
+	
+	public boolean getPrioritySupport() {
+		return prioritySupport;
 	}
 	
 	public boolean waivedCancellationFees() {

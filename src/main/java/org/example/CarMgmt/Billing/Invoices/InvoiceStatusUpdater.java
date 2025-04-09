@@ -55,6 +55,10 @@ public class InvoiceStatusUpdater {
 		Panel paidViaPanel = new Panel();
 		paidViaPanel.setLayoutManager(new GridLayout(1));
 		TerminalSize size = new TerminalSize(18, 3);
+		Label lockedInAmountDateLabel = new Label(String.format("Locked In Amount on %s", invoice.getLockedInDate())).addStyle(SGR.BOLD);
+		String lockedInAmount = invoice.getLockedInAmount();
+		Label lockedInAmountLabel = new Label(String.format("$%s", lockedInAmount));
+		EmptySpace lockedInPaidViaSpacer = new EmptySpace();
 		Label paidViaLabel = new Label("Paid via").addStyle(SGR.BOLD);
 		RadioBoxList<String> paidViaRadio = new RadioBoxList<String>(size);
 		paidViaRadio.addItem("Bank Transfer");
@@ -63,9 +67,15 @@ public class InvoiceStatusUpdater {
 		paidViaRadio.setCheckedItemIndex(0);
 		comboBox.addListener((selectedIndex, previousSelection, changedByUserInteraction) -> {
 			if (selectedIndex == 1) {
+				paidViaPanel.addComponent(lockedInAmountDateLabel);
+				paidViaPanel.addComponent(lockedInAmountLabel);
+				paidViaPanel.addComponent(lockedInPaidViaSpacer);
 				paidViaPanel.addComponent(paidViaLabel);
 				paidViaPanel.addComponent(paidViaRadio);
 			} else {
+				paidViaPanel.removeComponent(lockedInAmountDateLabel);
+				paidViaPanel.removeComponent(lockedInAmountLabel);
+				paidViaPanel.removeComponent(lockedInPaidViaSpacer);
 				paidViaPanel.removeComponent(paidViaLabel);
 				paidViaPanel.removeComponent(paidViaRadio);
 			}
@@ -82,13 +92,14 @@ public class InvoiceStatusUpdater {
 				Integer lastPaymentHistoryId = Integer.parseInt(PaymentHistoryRetriever.currentLastRowId);
 				Integer offset = lastPaymentHistoryId + 1;
 				LocalDateTime currentTime = LocalDateTime.now();
-				Double amountPaid = 1.0;
-				PaymentHistory paymentHistory = new PaymentHistory(offset.toString(), invoiceId, customerId, String.format("%.2f", amountPaid), selectedPaymentMethod, currentTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
-				try {
-					new PaymentHistoryWriter().writeToCsv(paymentHistory);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (selectedStatus.equals("Completed")) {
+					PaymentHistory paymentHistory = new PaymentHistory(offset.toString(), invoiceId, customerId, lockedInAmount, selectedPaymentMethod, currentTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+					try {
+						new PaymentHistoryWriter().writeToCsv(paymentHistory);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				new MessageDialogBuilder()
 	    		.setTitle("")

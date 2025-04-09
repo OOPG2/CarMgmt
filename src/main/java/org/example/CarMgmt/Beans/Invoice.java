@@ -37,6 +37,12 @@ public class Invoice extends CsvBeans {
     //@CsvBindByName(column = "created_on")
 	@CsvBindByPosition(position = 7)
     private String created_on;
+	
+	@CsvBindByPosition(position = 8)
+    private String locked_in_amount;
+	
+	@CsvBindByPosition(position = 9)
+    private String locked_in_date;
     
     /* calculated values */
 	@CsvIgnore
@@ -96,6 +102,14 @@ public class Invoice extends CsvBeans {
     	this.created_on = created_on;
     }
     
+    public void setLockedInAmount(String locked_in_amount) {
+    	this.locked_in_amount = locked_in_amount;
+    }
+    
+    public void setLockedInDate(String locked_in_date) {
+    	this.locked_in_date = locked_in_date;
+    }
+    
     public void setGST(Double gst) {
     	this.gst = gst;
     }
@@ -142,6 +156,14 @@ public class Invoice extends CsvBeans {
     
     public String getCreatedOn() {
     	return created_on;
+    }
+    
+    public String getLockedInAmount() {
+    	return locked_in_amount;
+    }
+    
+    public String getLockedInDate() {
+    	return locked_in_date;
     }
     
     public Double getGST() {
