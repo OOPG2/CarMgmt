@@ -1,8 +1,0 @@
-reservation_id,vehicle_id,customer_id,status,start_date,end_date,daily_rental,insurance,customer_notes
-1,4,2,Confirmed,1/4/25,7/4/25,50,10,NA
-2,31,1,Confirmed,2/4/25,7/4/25,60,15,NA
-3,22,3,Confirmed,6/4/25,17/4/25,150,20,NA
-4,4,2,Cancelled,1/4/25,8/4/25,50,10,NA
-5,5,3,Completed,22/3/25,27/3/25,70,10,NA
-6,44,1,Confirmed,11/4/25,13/4/25,50,10,NA
-7,44,1,Confirmed,15/4/25,17/4/25,50,10,NA

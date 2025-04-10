@@ -1,0 +1,2 @@
+user_id,password,role,name,email,phone,lifetime_points,loyalty_points,is_banned
+bob8329,password,Customer,bob,bob@gmail.com,85153053,0,0,false
