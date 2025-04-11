@@ -1,0 +1,7 @@
+user_id,password,role,name,email,phone,lifetime_points,loyalty_points,is_banned
+david56,password,Staff,david,david@gmail.com,12345678,0,0,false
+brenda1234,b,Staff,Brenda,brenda@gmail.com,12345678,0,0,false
+ali1234,a,Customer,Ali,ali@gmail.com,12345678,603,603,false
+greg4496,g,Customer,greg,greg@gmail.com,88887777,0,0,true
+charlie1234,c,Admin,Charlie,charlie@gmail.com,12345678,0,0,false
+frank7623,pass,Staff,frank,frank@gmail.com,12345678,0,0,false
