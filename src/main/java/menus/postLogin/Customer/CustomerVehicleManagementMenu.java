@@ -1,7 +1,6 @@
 package menus.postLogin.Customer;
 
 import com.googlecode.lanterna.gui2.*;
-
 import menus.LoggedMenu;
 
 public class CustomerVehicleManagementMenu {

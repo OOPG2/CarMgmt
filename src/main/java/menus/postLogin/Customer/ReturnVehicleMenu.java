@@ -1,25 +1,18 @@
 package menus.postLogin.Customer;
 
 import app.*;
-import manager.*;
-import objects.*;
-import beans.*;
-import csvParser.*;
-import static menus.postLogin.Customer.CustomerVehicleManagementMenu.showCustomerVehicleManagementMenu;
-
+import beans.Reservation;
+import beans.Vehicle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.table.Table;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import manager.AuthenticationManager;
+import objects.User;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static menus.postLogin.Customer.CustomerVehicleManagementMenu.showCustomerVehicleManagementMenu;
 
 public class ReturnVehicleMenu {
     public static void showMenu(MultiWindowTextGUI gui) {
@@ -31,21 +24,21 @@ public class ReturnVehicleMenu {
         Panel panel = new Panel();
         panel.setLayoutManager(new LinearLayout(Direction.VERTICAL));
 
-        Table<String> table =new Table<>("Reservation ID","Vehicle ID","Customer ID","Status","Start Date","End Date","Daily Rental","Insurance Fee","Notes");
+        Table<String> table =new Table<>("Reservation ID","Vehicle ID","Customer ID","Status","Start Date","End Date");
         try {
             ArrayList<Reservation> info = new ArrayList<>();
             HashMap<String, Reservation> hashmap = new ReservationRetriever().getReservations();
             hashmap.keySet().stream()
                     .filter(k->
-                            hashmap.get(String.valueOf(k)).getCustomer_id().equals(loggedUser.getUserId()) &&
-                            hashmap.get(String.valueOf(k)).getStatus().equals("Collected"))
+                            hashmap.get(String.valueOf(k)).getUserId().equals(loggedUser.getUserId()) &&
+                                    hashmap.get(String.valueOf(k)).getStatus().equals("PickedUp"))
                     .mapToInt(Integer::valueOf)
                     .sorted()
                     .forEach(k-> info.add(hashmap.get(String.valueOf(k))));
             if (!info.isEmpty()){
                 table.getTableModel().clear();
                 for (Reservation r:info){
-                    table.getTableModel().addRow(r.getAll());
+                    table.getTableModel().addRow(r.getTableRow());
                 }
             }
             else{
@@ -66,25 +59,11 @@ public class ReturnVehicleMenu {
             String selectedID = table.getTableModel().getRow(table.getSelectedRow()).get(0);
             try {
                 Reservation reservation = new ReservationRetriever().retrieveById(selectedID);
-                reservation.setStatus("Completed");
+                reservation.setStatus("Returned");
                 ReservationEditor.modifyRowInCsv(selectedID, reservation);
-//                OutputStream out = new FileOutputStream("databases/reservations.csv");
-//                OutputStreamWriter writer = new OutputStreamWriter(out);
-//                StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).build();
-//                hashmap.keySet().stream()
-//                        .mapToInt(Integer::valueOf)
-//                        .sorted()
-//                        .forEach(k -> {
-//                            try {
-//                                beanToCsv.write(hashmap.get(String.valueOf(k)));
-//                            } catch (CsvDataTypeMismatchException e) {
-//                                e.printStackTrace();
-//                            } catch (CsvRequiredFieldEmptyException e) {
-//                                e.printStackTrace();
-//                            }
-//                        });
-//                writer.flush();
-//                writer.close();
+                Vehicle vehicle = new VehicleRetriever().retrieveById(String.valueOf(reservation.getVehicleId()));
+                vehicle.setStatus("Available");
+                VehicleEditor.modifyRowInCsv(String.valueOf(vehicle.getVehicleID()),vehicle);
                 new MessageDialogBuilder()
                         .setTitle("Vehicle Returned")
                         .setText("Thank you for renting with us! Hope to see you again soon!")
@@ -94,15 +73,15 @@ public class ReturnVehicleMenu {
                 HashMap<String, Reservation> hashmap = new ReservationRetriever().getReservations();
                 hashmap.keySet().stream()
                         .filter(k->
-                                hashmap.get(String.valueOf(k)).getCustomer_id().equals(loggedUser.getUserId()) &&
-                                hashmap.get(String.valueOf(k)).getStatus().equals("Collected"))
+                                hashmap.get(String.valueOf(k)).getUserId().equals(loggedUser.getUserId()) &&
+                                        hashmap.get(String.valueOf(k)).getStatus().equals("PickedUp"))
                         .mapToInt(Integer::valueOf)
                         .sorted()
                         .forEach(k-> info.add(hashmap.get(String.valueOf(k))));
                 if (!info.isEmpty()){
                     table.getTableModel().clear();
                     for (Reservation r:info){
-                        table.getTableModel().addRow(r.getAll());
+                        table.getTableModel().addRow(r.getTableRow());
                     }
                 }
                 else{

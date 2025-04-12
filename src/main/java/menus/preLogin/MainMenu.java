@@ -2,8 +2,8 @@ package menus.preLogin;
 
 import com.googlecode.lanterna.gui2.*;
 
-import static menus.preLogin.LoginMenu.showLoginMenu;
 import static menus.createAccountMenu.showCreateAccountMenu;
+import static menus.preLogin.LoginMenu.showLoginMenu;
 
 public class MainMenu {
     public static void showMainMenu(MultiWindowTextGUI gui) {

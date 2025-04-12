@@ -1,20 +1,22 @@
 package Reservations;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameMappingStrategy;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import beans.CsvBeans;
+import beans.Reservation;
+import beans.Vehicle;
+import com.opencsv.bean.*;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import beans.CsvBeans;
+import constants.Constants;
+import objects.Customer;
+import objects.User;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-
-import constants.Constants;
-import objects.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 public class ReservationManager {
     private static final String USERS_CSV = "src/main/resources/databases/users.csv";
     private static final String VEHICLES_CSV = "src/main/resources/databases/vehicles.csv";
@@ -91,7 +93,7 @@ public class ReservationManager {
             System.err.println("Error loading vehicles: " + e.getMessage());
         }
         for (Vehicle v : vehicles) {
-            vehicleMap.put(v.getId(), v);
+            vehicleMap.put(v.getVehicleID(), v);
         }
     }
 
@@ -110,8 +112,8 @@ public class ReservationManager {
             System.err.println("Error loading reservations: " + e.getMessage());
         }
         for (Reservation r : reservations) {
-            if (r.getId() >= nextReservationId) {
-                nextReservationId = r.getId() + 1;
+            if (r.getReservationID() >= nextReservationId) {
+                nextReservationId = r.getReservationID() + 1;
             }
         }
     }
@@ -164,7 +166,7 @@ public class ReservationManager {
 
     public void cancelReservation(User user, int reservationId) {
         Reservation res = getReservationById(reservationId);
-        if (res == null || !"Reserved".equalsIgnoreCase(res.getStatus())) {
+        if (res == null || !res.getStatus().equalsIgnoreCase("Reserved")) {
             throw new IllegalArgumentException("Cannot cancel this reservation.");
         }
         if (!user.getUserId().equals(res.getUserId()) && !"Staff".equalsIgnoreCase(user.getRole())) {
@@ -193,7 +195,7 @@ public class ReservationManager {
 
     public Reservation getReservationById(int reservationId) {
         for (Reservation r : reservations) {
-            if (r.getId() == reservationId) return r;
+            if (r.getReservationID() == reservationId) return r;
         }
         return null;
     }

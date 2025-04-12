@@ -1,19 +1,14 @@
 package menus.preLogin;
 
-import app.*;
-import constants.*;
-import manager.*;
+import app.App;
+import com.googlecode.lanterna.gui2.*;
+import constants.Constants;
+import manager.AuthenticationManager;
+
 import static helper.Flash.flash;
 import static menus.ChangePasswordMenu.showChangePasswordMenu;
 import static menus.LoggedMenu.showLoggedMenu;
 import static menus.preLogin.MainMenu.showMainMenu;
-
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.Panel;
-
-import com.googlecode.lanterna.gui2.*;
 
 public class LoginMenu {
     public static void showLoginMenu(MultiWindowTextGUI gui, String createdId) {

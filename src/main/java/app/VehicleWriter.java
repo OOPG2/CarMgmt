@@ -1,14 +1,13 @@
 package app;
 
-import beans.*;
-import constants.*;
-
+import beans.CsvBeans;
+import beans.Vehicle;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import constants.Constants;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Collections;
 
 public class VehicleWriter extends Writer{
     @Override

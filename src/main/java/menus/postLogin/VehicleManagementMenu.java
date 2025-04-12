@@ -1,7 +1,6 @@
 package menus.postLogin;
 
 import com.googlecode.lanterna.gui2.*;
-
 import menus.LoggedMenu;
 
 import static menus.postLogin.AddVehicleMenu.showAddVehicleMenu;

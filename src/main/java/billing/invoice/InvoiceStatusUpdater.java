@@ -1,38 +1,29 @@
 package billing.invoice;
 
-import app.*;
-import constants.*;
+import app.App;
+import beans.Invoice;
+import beans.PaymentHistory;
+import billing.payment.PaymentHistoryRetriever;
+import billing.payment.PaymentHistoryWriter;
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
+import constants.InvoiceStatuses;
+import manager.UserManager;
 import objects.Customer;
 import rewards.AddPoints;
-import beans.*;
-import billing.payment.*;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.ComboBox;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Interactable.FocusChangeDirection;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.RadioBoxList;
-import com.googlecode.lanterna.gui2.TextBox;
-import com.googlecode.lanterna.gui2.Window;
-import com.googlecode.lanterna.gui2.table.Table;
-
 public class InvoiceStatusUpdater {
 	static public void showInvoiceStatusUpdater(Invoice invoice) {
+		App app = new App();
+		UserManager userManager = app.getUserManager();
+
 		String invoiceId = invoice.getId();
 		String customerId = invoice.getUserId();
 		MultiWindowTextGUI gui = App.gui;
@@ -105,7 +96,7 @@ public class InvoiceStatusUpdater {
 					try {
 						new PaymentHistoryWriter().writeToCsv(paymentHistory);
 						Integer pointsEarned = (int) Double.parseDouble(invoice.getBaseAmount());
-						Customer customer = (Customer) App.userManager.getUserByID(customerId);
+						Customer customer = (Customer) userManager.getUserByID(customerId);
 						AddPoints.addPoints(customer, pointsEarned);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block

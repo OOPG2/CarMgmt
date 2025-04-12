@@ -1,15 +1,19 @@
 package menus;
 
-import app.*;
-import helper.*;
-import manager.*;
-import objects.*;
+import app.App;
+import com.googlecode.lanterna.gui2.*;
+import helper.IDGenerator;
+import manager.AuthenticationManager;
+import manager.MenuManager;
+import manager.UserManager;
+import objects.User;
+
+import java.util.regex.Pattern;
+
 import static helper.Flash.flash;
 import static menus.postLogin.Admin.StaffManagementMenu.showStaffManagementMenu;
 import static menus.preLogin.LoginMenu.showLoginMenu;
 import static menus.preLogin.MainMenu.showMainMenu;
-
-import com.googlecode.lanterna.gui2.*;
 
 public class createAccountMenu {
     public static void showCreateAccountMenu(MultiWindowTextGUI gui) {
@@ -29,17 +33,44 @@ public class createAccountMenu {
         panel.addComponent(new Label("Name:").setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
         panel.addComponent(new Label("Email:").setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));
 
-        final TextBox nameBox = new TextBox().setTextChangeListener((name, changedByUserInteraction) -> {
+        final TextBox nameBox = new TextBox().setValidationPattern(Pattern.compile("[a-zA-Z ]*"));
+        nameBox.setTextChangeListener((name, changedByUserInteraction) -> {
             if (changedByUserInteraction) {
+                String processedName = name;
+
+                // 1. Remove leading space if present
+                if (!processedName.isEmpty() && processedName.charAt(0) == ' ') {
+                    processedName = processedName.substring(1);
+                }
+
+                // 2. Enforce 50-character limit
+                if (processedName.length() > 50) {
+                    processedName = processedName.substring(0, 50);
+                }
+
+                // 3. Update textbox if corrections were made
+                if (!processedName.equals(name)) {
+                    nameBox.setText(processedName);
+                    processedName = nameBox.getText(); // Get the final sanitized value
+                }
+
+                // 4. Check if name is empty OR contains only spaces
+                if (processedName.trim().isEmpty()) {
+                    userIdLabel.setText("");  // Clear ID display
+                    return; // Exit early - don't generate ID for empty/whitespace
+                }
+
+                // 5. Generate user ID for valid names
                 String userId;
                 do {
-                    userId = IDGenerator.generateUniqueID(name.toLowerCase().contains(" ") ? name.toLowerCase().substring(0, name.toLowerCase().indexOf(" ")) : name.toLowerCase());
-                }
-                while (userManager.getUserByID(userId) != null);
-                if (!name.isEmpty())
-                    userIdLabel.setText(userId);
-                else
-                    userIdLabel.setText("");
+                    userId = IDGenerator.generateUniqueID(
+                            processedName.toLowerCase().contains(" ")
+                                    ? processedName.substring(0, processedName.indexOf(" ")).toLowerCase()
+                                    : processedName.toLowerCase()
+                    );
+                } while (userManager.getUserByID(userId) != null);
+
+                userIdLabel.setText(userId);
             }
         });
         panel.addComponent(nameBox.setLayoutData(GridLayout.createHorizontallyFilledLayoutData(2)));

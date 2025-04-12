@@ -8,7 +8,7 @@ public class Constants {
 	private static String bankRecipient = "OOP Rentals";
 	private static String bankName = "OOP Bank";
 	private static String bankAccountNo = "123-456-7890";
-	private static String csvBasePath = "/Users/axel/Downloads/FullyIntegratedCarMgmt/src/main/resources/";
+	private static String csvBasePath = "src/main/resources/";
 	private static String defaultPassword = "password";
 	private static Double dailyInsurance = 20.0;
 	

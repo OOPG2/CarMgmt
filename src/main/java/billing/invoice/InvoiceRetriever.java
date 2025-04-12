@@ -1,7 +1,7 @@
 package billing.invoice;
 
-import beans.*;
-import app.*; 
+import app.Retriever;
+import beans.Invoice;
 
 import java.util.Collections;
 import java.util.HashMap;

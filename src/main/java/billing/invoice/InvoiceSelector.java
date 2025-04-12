@@ -1,13 +1,12 @@
 package billing.invoice;
 
-import app.*;
-import beans.*;
+import app.App;
+import beans.Invoice;
 import com.googlecode.lanterna.gui2.*;
-import menus.*;
+import com.googlecode.lanterna.gui2.table.Table;
+import menus.LoggedMenu;
 
 import java.util.List;
-
-import com.googlecode.lanterna.gui2.table.Table;
 
 public class InvoiceSelector {
 	public static Table<String> toPayTable;

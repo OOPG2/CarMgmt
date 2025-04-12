@@ -1,25 +1,21 @@
 package billing.payment;
 
+import app.App;
+import beans.PaymentHistory;
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.gui2.*;
+import manager.AuthenticationManager;
+import menus.LoggedMenu;
+import objects.User;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import app.*;
-import beans.*;
-import manager.*;
-import menus.*;
-import objects.*;
-
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-
 public class PaymentHistoryListing {
 	static public void showPaymentHistoryListing() {
+		App app = new App();
+		AuthenticationManager authenticationManager = app.getAuthenticationManager();
 		MultiWindowTextGUI gui = App.gui;
 		BasicWindow menuWindow = new BasicWindow(String.format("Payment Histories"));
 		Panel panel = new Panel();
@@ -40,11 +36,10 @@ public class PaymentHistoryListing {
 	    new PaymentHistoryRetriever();
 	    HashMap<String, PaymentHistory> historyHashmap = PaymentHistoryRetriever.paymentHistories;
 	    List<PaymentHistory> paymentHistories = new ArrayList<PaymentHistory>(historyHashmap.values());
-	    AuthenticationManager authenticationManager = App.getAuthenticationManager();
         User loggedUser = authenticationManager.getLoggedUser();
 	    String userId = loggedUser.getUserId();
 	    paymentHistories.stream()
-	    //.filter(h -> h.getId().equals(userId))
+	    .filter(h -> h.getId().equals(userId))
 	    .forEach(h -> {
 	    	historyListingPanel.addComponent(new Label(h.getInvoiceId()));
 	    	historyListingPanel.addComponent(new Label("$" + h.getInvoiceAmount()));

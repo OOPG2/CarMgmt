@@ -1,21 +1,17 @@
 package menus.postLogin;
 
-import beans.*;
-import app.*;
-import static menus.postLogin.VehicleFleetMenu.showVehicleFleetMenu;
-import static menus.postLogin.VehicleInfoMenu.showVehicleInfoMenu;
-
+import app.VehicleEditor;
+import app.VehicleRetriever;
+import beans.Vehicle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-import java.io.*;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
+
+import static menus.postLogin.VehicleFleetMenu.showVehicleFleetMenu;
+import static menus.postLogin.VehicleInfoMenu.showVehicleInfoMenu;
 
 public class UpdateVehicleInfoMenu {
     public static void showUpdateVehicleInfoMenu(MultiWindowTextGUI gui) {
@@ -43,15 +39,15 @@ public class UpdateVehicleInfoMenu {
             Panel editPanel = new Panel();
             editPanel.setLayoutManager(new GridLayout(4));
             Label brand = new Label("Brand:");
-            TextBox brandText = new TextBox(info.getBrand());
+            TextBox brandText = new TextBox(info.getMake());
             Label model = new Label("Model:");
             TextBox modelText = new TextBox(info.getModel());
             Label type = new Label("Type:");
             TextBox typeText = new TextBox(info.getType());
             Label carplate = new Label("Car Plate:");
-            TextBox carplateText = new TextBox(info.getCar_plate());
+            TextBox carplateText = new TextBox(info.getPlate());
             Label rental = new Label("Daily Rental:");
-            TextBox rentalText = new TextBox(info.getDaily_rental()).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
+            TextBox rentalText = new TextBox(String.valueOf(info.getRentalCost())).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
             Label status = new Label("Status:");
             ComboBox<String> statusBox = new ComboBox<String>();
             statusBox.addItem("Available");
@@ -66,11 +62,11 @@ public class UpdateVehicleInfoMenu {
             conditionBox.addItem("Scratched");
             conditionBox.setSelectedItem(info.getCondition());
             Label age = new Label("Age:");
-            TextBox ageText = new TextBox(info.getAge()).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
+            TextBox ageText = new TextBox(String.valueOf(info.getYearsUsed())).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
             Label seats = new Label("Seats:");
-            TextBox seatsText = new TextBox(info.getSeats()).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
+            TextBox seatsText = new TextBox(String.valueOf(info.getSeats())).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
             Label mileage = new Label("Mileage:");
-            TextBox mileageText = new TextBox(info.getMileage()).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
+            TextBox mileageText = new TextBox(String.valueOf(info.getMileage())).setValidationPattern(Pattern.compile("[1-9][0-9]*"));
             editPanel.addComponent(brand);
             editPanel.addComponent(brandText);
             editPanel.addComponent(model);
@@ -93,15 +89,15 @@ public class UpdateVehicleInfoMenu {
             editPanel.addComponent(mileageText);
             Button saveButton = new Button("Save", () -> {
                 if (brandText.getText().isBlank()||
-                    modelText.getText().isBlank()||
-                    typeText.getText().isBlank()||
-                    carplateText.getText().isBlank()||
-                    rentalText.getText().isBlank()||
-                    statusBox.getSelectedItem().isBlank()||
-                    conditionBox.getSelectedItem().isBlank()||
-                    ageText.getText().isBlank()||
-                    seatsText.getText().isBlank()||
-                    mileageText.getText().isBlank())
+                        modelText.getText().isBlank()||
+                        typeText.getText().isBlank()||
+                        carplateText.getText().isBlank()||
+                        rentalText.getText().isBlank()||
+                        statusBox.getSelectedItem().isBlank()||
+                        conditionBox.getSelectedItem().isBlank()||
+                        ageText.getText().isBlank()||
+                        seatsText.getText().isBlank()||
+                        mileageText.getText().isBlank())
                 {
                     new MessageDialogBuilder()
                             .setTitle("Missing Information!")
@@ -110,16 +106,16 @@ public class UpdateVehicleInfoMenu {
                             .showDialog(gui);
                 }
                 else {
-                    info.setBrand(brandText.getText());
+                    info.setMake(brandText.getText());
                     info.setModel(modelText.getText());
                     info.setType(typeText.getText());
-                    info.setCar_plate(carplateText.getText());
-                    info.setDaily_rental(rentalText.getText());
+                    info.setPlate(carplateText.getText());
+                    info.setRentalCost(Double.parseDouble(rentalText.getText()));
                     info.setStatus(statusBox.getSelectedItem());
                     info.setCondition(conditionBox.getSelectedItem());
-                    info.setAge(ageText.getText());
-                    info.setSeats(seatsText.getText());
-                    info.setMileage(mileageText.getText());
+                    info.setYearsUsed(Integer.parseInt(ageText.getText()));
+                    info.setSeats(Integer.parseInt(seatsText.getText()));
+                    info.setMileage(Integer.parseInt(mileageText.getText()));
                     VehicleEditor.modifyRowInCsv(vehicleID, info);
 //                    try {
 //                        OutputStream out = new FileOutputStream("databases/vehicles.csv");

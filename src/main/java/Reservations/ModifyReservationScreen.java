@@ -1,15 +1,15 @@
 package Reservations;
 
 
-
+import beans.Reservation;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import objects.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import objects.*;
 /**
  * Screen for modifying an existing reservation's details (vehicle or time).
  * Only reservations that have not been picked up (status "Reserved") can be modified.

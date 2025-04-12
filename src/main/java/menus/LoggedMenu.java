@@ -1,28 +1,31 @@
 package menus;
 
-import app.*;
+import Reservations.ReservationMenu;
+import app.App;
 import billing.invoice.InvoiceSearch;
 import billing.invoice.InvoiceSelector;
 import billing.invoice.ReservationSearch;
 import billing.payment.PaymentHistoryListing;
-import manager.*;
-import objects.*;
+import com.googlecode.lanterna.gui2.*;
+import manager.AuthenticationManager;
+import objects.Admin;
+import objects.Customer;
+import objects.Staff;
+import objects.User;
 import rewards.PerksViewer;
-import Reservations.*;
+
+import static menus.ProfileMenu.showProfileMenu;
 import static menus.postLogin.Admin.CustomerManagementMenu.showCustomerManagementMenu;
 import static menus.postLogin.Admin.StaffManagementMenu.showStaffManagementMenu;
-import static menus.ProfileMenu.showProfileMenu;
 import static menus.postLogin.Customer.CustomerVehicleManagementMenu.showCustomerVehicleManagementMenu;
 import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
 import static menus.preLogin.MainMenu.showMainMenu;
 
-import com.googlecode.lanterna.gui2.*;
-
 public class LoggedMenu {
     public static void showLoggedMenu() {
+        App app = new App();
         MultiWindowTextGUI gui = App.gui;
-
-        AuthenticationManager authenticationManager = App.getAuthenticationManager();
+        AuthenticationManager authenticationManager = app.getAuthenticationManager();
         User loggedUser = authenticationManager.getLoggedUser();
 
         BasicWindow showLoggedWindow = new BasicWindow("OOP Rentals");
@@ -45,10 +48,11 @@ public class LoggedMenu {
             });
 
 
-            Button rentalsButton = new Button("View Past Rentals", () -> {
-                showLoggedWindow.close();
-                showLoggedMenu();
-            });
+            // NOTE: THIS MUST BE IMPLEMENTED --- IT IS NOW UNDER RESERVATIONS (NAMED VIEW ALL RESERVATIONS)
+//            Button rentalsButton = new Button("View Past Rentals", () -> {
+//                showLoggedWindow.close();
+//                showLoggedMenu();
+//            });
             Button invoicesButton = new Button("View & Pay Invoices", () -> {
                 showLoggedWindow.close();
                 InvoiceSelector.showInvoiceSelector();
@@ -66,7 +70,7 @@ public class LoggedMenu {
 
             panel.addComponent(vehiclesButton);
             panel.addComponent(reservationsButton);
-            panel.addComponent(rentalsButton);
+//            panel.addComponent(rentalsButton);
             panel.addComponent(invoicesButton);
             panel.addComponent(paymentHistoryButton);
             panel.addComponent(viewPerksButton);

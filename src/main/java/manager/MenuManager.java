@@ -1,10 +1,10 @@
 package manager;
 
+import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
+
+import static menus.ProfileMenu.showProfileMenu;
 import static menus.postLogin.Admin.CustomerManagementMenu.showCustomerManagementMenu;
 import static menus.postLogin.Admin.StaffManagementMenu.showStaffManagementMenu;
-import static menus.ProfileMenu.showProfileMenu;
-
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 
 public class MenuManager {
     private static String cameFrom = null; // Mainly for pages of depth 1.

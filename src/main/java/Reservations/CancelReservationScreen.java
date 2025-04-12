@@ -1,10 +1,13 @@
 package Reservations;
 
+import beans.Reservation;
+import beans.Vehicle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import objects.User;
+
 import java.util.List;
-import objects.*;
 
 /**
  * Screen for canceling an existing reservation.
@@ -50,7 +53,7 @@ public class CancelReservationScreen extends BasicWindow {
                 }
                 listBox.addItem(itemLabel, () -> {
                     try {
-                        manager.cancelReservation(currentUser, res.getId());
+                        manager.cancelReservation(currentUser, res.getReservationID());
                         MessageDialog.showMessageDialog(getTextGUI(), "Success",
                                 "Reservation " + res.getId() + " has been cancelled.", MessageDialogButton.OK);
                         this.close();

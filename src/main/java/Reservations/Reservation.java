@@ -1,9 +1,9 @@
 package Reservations;
 
 import com.opencsv.bean.CsvBindByName;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import objects.*;
 /**
  * Model class for a reservation record.
  * Each reservation has an ID, a userId (who made the reservation), a vehicleId, 

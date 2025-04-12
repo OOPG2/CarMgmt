@@ -2,8 +2,7 @@ package Reservations;
 
 import app.App;
 import com.googlecode.lanterna.gui2.*;
-import java.util.List;
-import objects.*;
+import objects.User;
 
 public class ReservationMenu extends BasicWindow {
     public ReservationMenu(ReservationManager manager, User user) {

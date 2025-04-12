@@ -1,8 +1,7 @@
 package billing.payment;
 
-import app.*;
-import constants.*;
-import beans.*;
+import app.Retriever;
+import beans.PaymentHistory;
 
 import java.util.Collections;
 import java.util.HashMap;

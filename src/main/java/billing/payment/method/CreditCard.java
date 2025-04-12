@@ -1,31 +1,29 @@
 package billing.payment.method;
 
-import app.*;
-import beans.*;
-
-import billing.invoice.*;
-import billing.payment.*;
+import app.App;
+import beans.Invoice;
+import beans.PaymentHistory;
+import billing.invoice.InvoiceEditor;
+import billing.invoice.InvoiceSelector;
+import billing.invoice.InvoiceViewer;
+import billing.payment.PaymentHistoryRetriever;
+import billing.payment.PaymentHistoryWriter;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
+import manager.AuthenticationManager;
 import objects.Customer;
-import rewards.*;
+import rewards.AddPoints;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.TextBox;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
-
 public class CreditCard {
 	public static void showCreditCardForm(Invoice invoice, Double totalPayable) {
+		App app = new App();
+		AuthenticationManager authenticationManager = app.getAuthenticationManager();
 		MultiWindowTextGUI gui = App.gui;
 		BasicWindow menuWindow = new BasicWindow(String.format("Credit Card Payment"));
 		Panel panel = new Panel();
@@ -53,7 +51,7 @@ public class CreditCard {
         formPanel.addComponent(new Label("CVV"));
         TextBox cvvInput = new TextBox(new TerminalSize(5, 1), "123");
         formPanel.addComponent(cvvInput);
-        String userId = App.authenticationManager.getLoggedUser().getUserId();
+        String userId = authenticationManager.getLoggedUser().getUserId();
         Button pay = new Button("Pay", () -> {
         	LocalDate lockedInDate = LocalDate.now();
         	invoice.setLockedInAmount(String.format("%.2f", totalPayable));
@@ -68,7 +66,7 @@ public class CreditCard {
 			try {
 				new PaymentHistoryWriter().writeToCsv(paymentHistory);
 				Integer pointsEarned = (int) Double.parseDouble(invoice.getBaseAmount());
-				Customer customer = (Customer) App.authenticationManager.getLoggedUser();
+				Customer customer = (Customer) authenticationManager.getLoggedUser();
 				AddPoints.addPoints(customer, pointsEarned);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

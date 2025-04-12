@@ -1,6 +1,7 @@
 package manager;
 
-import objects.*;
+import objects.Customer;
+import objects.User;
 
 import java.util.Map;
 

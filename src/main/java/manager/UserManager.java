@@ -1,14 +1,14 @@
 package manager;
 
-import constants.*;
-import factories.*;
-import interfaces.*;
-import objects.*;
+import constants.Constants;
+import factories.UserFactory;
+import interfaces.UserStorage;
+import objects.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 
 // CRUD (User)

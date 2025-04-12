@@ -1,22 +1,20 @@
 package menus.postLogin.Customer;
 
 import app.*;
-import exceptions.*;
-import manager.*;
-import objects.*;
-import beans.*;
-import static menus.postLogin.Customer.CustomerVehicleManagementMenu.showCustomerVehicleManagementMenu;
-
+import beans.Reservation;
+import beans.Vehicle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.table.Table;
+import exceptions.RowNotFoundException;
+import manager.AuthenticationManager;
+import objects.User;
 
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
+
+import static menus.postLogin.Customer.CustomerVehicleManagementMenu.showCustomerVehicleManagementMenu;
 
 
 public class CollectVehicleMenu {
@@ -29,25 +27,23 @@ public class CollectVehicleMenu {
         Panel panel = new Panel();
         panel.setLayoutManager(new LinearLayout(Direction.VERTICAL));
 
-        Table<String> table =new Table<>("Reservation ID","Vehicle ID","Customer ID","Status","Start Date","End Date","Daily Rental","Insurance Fee","Notes");
+        Table<String> table =new Table<>("Reservation ID","Vehicle ID","Customer ID","Status","Start Date","End Date");
         try {
             ArrayList<Reservation> info = new ArrayList<>();
             HashMap<String, Reservation> hashmap = new ReservationRetriever().getReservations();
             hashmap.keySet().stream()
                     .filter(k->
-                            hashmap.get(String.valueOf(k)).getCustomer_id().equals(loggedUser.getUserId()) &&
-                            hashmap.get(String.valueOf(k)).getStatus().equals("Confirmed") &&
-                            (LocalDate.parse(hashmap.get(String.valueOf(k)).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isBefore(LocalDate.now()) ||
-                            LocalDate.parse(hashmap.get(String.valueOf(k)).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now()))&&
-                            (LocalDate.parse(hashmap.get(String.valueOf(k)).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isAfter(LocalDate.now()) ||
-                            LocalDate.parse(hashmap.get(String.valueOf(k)).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now())))
+                            hashmap.get(String.valueOf(k)).getUserId().equals(loggedUser.getUserId()) &&
+                                    hashmap.get(String.valueOf(k)).getStatus().equals("Reserved") &&
+                                    hashmap.get(String.valueOf(k)).getStartDateTime().isBefore(LocalDateTime.now()) &&
+                                    hashmap.get(String.valueOf(k)).getEndDateTime().isAfter(LocalDateTime.now()))
                     .mapToInt(Integer::valueOf)
                     .sorted()
                     .forEach(k-> info.add(hashmap.get(String.valueOf(k))));
             if (!info.isEmpty()){
                 table.getTableModel().clear();
                 for (Reservation r:info){
-                    table.getTableModel().addRow(r.getAll());
+                    table.getTableModel().addRow(r.getTableRow());
                 }
             }
             else{
@@ -68,30 +64,31 @@ public class CollectVehicleMenu {
             String selectedID = table.getTableModel().getRow(table.getSelectedRow()).get(0);
             try {
                 Reservation reservation = new ReservationRetriever().retrieveById(selectedID);
-                reservation.setStatus("Collected");
+                reservation.setStatus("PickedUp");
                 ReservationEditor.modifyRowInCsv(selectedID, reservation);
+                Vehicle vehicle = new VehicleRetriever().retrieveById(String.valueOf(reservation.getVehicleId()));
+                vehicle.setStatus("PickedUp");
+                VehicleEditor.modifyRowInCsv(String.valueOf(vehicle.getVehicleID()),vehicle);
                 new MessageDialogBuilder()
                         .setTitle("Vehicle Collected")
-                        .setText("Thank you for renting with us! Please return your vehicle by " + reservation.getEnd_date())
+                        .setText("Thank you for renting with us! Please return your vehicle by " + reservation.getEnd())
                         .build()
                         .showDialog(gui);
                 ArrayList<Reservation> info = new ArrayList<>();
                 HashMap<String, Reservation> hashmap = new ReservationRetriever().getReservations();
                 hashmap.keySet().stream()
                         .filter(k->
-                                hashmap.get(String.valueOf(k)).getCustomer_id().equals(loggedUser.getUserId()) &&
-                                        hashmap.get(String.valueOf(k)).getStatus().equals("Confirmed") &&
-                                        (LocalDate.parse(hashmap.get(String.valueOf(k)).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isBefore(LocalDate.now()) ||
-                                                LocalDate.parse(hashmap.get(String.valueOf(k)).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now()))&&
-                                        (LocalDate.parse(hashmap.get(String.valueOf(k)).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isAfter(LocalDate.now()) ||
-                                                LocalDate.parse(hashmap.get(String.valueOf(k)).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now())))
+                                hashmap.get(String.valueOf(k)).getUserId().equals(loggedUser.getUserId()) &&
+                                        hashmap.get(String.valueOf(k)).getStatus().equals("Reserved") &&
+                                        hashmap.get(String.valueOf(k)).getStartDateTime().isBefore(LocalDateTime.now()) &&
+                                        hashmap.get(String.valueOf(k)).getEndDateTime().isAfter(LocalDateTime.now()))
                         .mapToInt(Integer::valueOf)
                         .sorted()
                         .forEach(k-> info.add(hashmap.get(String.valueOf(k))));
                 if (!info.isEmpty()){
                     table.getTableModel().clear();
                     for (Reservation r:info){
-                        table.getTableModel().addRow(r.getAll());
+                        table.getTableModel().addRow(r.getTableRow());
                     }
                 }
                 else{
@@ -106,59 +103,6 @@ public class CollectVehicleMenu {
             } catch (RowNotFoundException e) {
                 throw new RuntimeException(e);
             }
-//            try {
-//                OutputStream out = new FileOutputStream("databases/reservations.csv");
-//                OutputStreamWriter writer = new OutputStreamWriter(out);
-//                StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).build();
-//                hashmap.keySet().stream()
-//                        .mapToInt(Integer::valueOf)
-//                        .sorted()
-//                        .forEach(k -> {
-//                            try {
-//                                beanToCsv.write(hashmap.get(String.valueOf(k)));
-//                            } catch (CsvDataTypeMismatchException e) {
-//                                e.printStackTrace();
-//                            } catch (CsvRequiredFieldEmptyException e) {
-//                                e.printStackTrace();
-//                            }
-//                        });
-//                writer.flush();
-//                writer.close();
-//                new MessageDialogBuilder()
-//                        .setTitle("Vehicle Collected")
-//                        .setText("Thank you for renting with us! Please return your vehicle by " + hashmap.get(selectedID).getEnd_date())
-//                        .build()
-//                        .showDialog(gui);
-//                ArrayList<Reservation> info = new ArrayList<>();
-//                hashmap.keySet().stream()
-//                        .filter(k->
-//                                hashmap.get(String.valueOf(k)).getCustomer_id().equals(loggedUser.getUserId()) &&
-//                                hashmap.get(String.valueOf(k)).getStatus().equals("Confirmed") &&
-//                                (LocalDate.parse(hashmap.get(String.valueOf(k)).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isBefore(LocalDate.now()) ||
-//                                LocalDate.parse(hashmap.get(String.valueOf(k)).getStart_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now()))&&
-//                                (LocalDate.parse(hashmap.get(String.valueOf(k)).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isAfter(LocalDate.now()) ||
-//                                LocalDate.parse(hashmap.get(String.valueOf(k)).getEnd_date(), DateTimeFormatter.ofPattern("d/M/yy", Locale.ENGLISH)).isEqual(LocalDate.now())))
-//                        .mapToInt(Integer::valueOf)
-//                        .sorted()
-//                        .forEach(k-> info.add(hashmap.get(String.valueOf(k))));
-//                if (!info.isEmpty()){
-//                    table.getTableModel().clear();
-//                    for (Reservation r:info){
-//                        table.getTableModel().addRow(r.getAll());
-//                    }
-//                }
-//                else{
-//                    new MessageDialogBuilder()
-//                            .setTitle("No Vehicles For Collection!")
-//                            .setText("You have no other vehicles ready for collection")
-//                            .build()
-//                            .showDialog(gui);
-//                    window.close();
-//                    showCustomerVehicleManagementMenu(gui);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
         });
         Label instructions = new Label("Press \"Enter\" To Collect The Selected Vehicle");
         panel.addComponent(instructions);

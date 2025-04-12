@@ -1,20 +1,14 @@
 package rewards;
 
-import app.*;
-import manager.*;
-import menus.*;
-import objects.*;
-
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
+import app.App;
+import com.googlecode.lanterna.gui2.*;
+import manager.AuthenticationManager;
+import menus.LoggedMenu;
+import objects.Customer;
 
 public class PerksViewer {
 	public static void showPerks() {
+        App app = new App();
 		MultiWindowTextGUI gui = App.gui;
 		BasicWindow menuWindow = new BasicWindow(String.format("Membership Perks"));
 		Panel panel = new Panel();
@@ -24,7 +18,7 @@ public class PerksViewer {
         	LoggedMenu.showLoggedMenu();
         });
         panel.addComponent(back);
-        AuthenticationManager authenticationManager = App.getAuthenticationManager();
+        AuthenticationManager authenticationManager = app.getAuthenticationManager();
         Customer user = (Customer) authenticationManager.getLoggedUser();
         TierBenefits tierBenefits = new TierBenefits(user.getLifetimePoints());
         panel.addComponent(new Label(String.format("You are in the %s tier. Enjoy:", tierBenefits.getTier())));

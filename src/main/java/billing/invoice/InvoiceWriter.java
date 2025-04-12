@@ -1,13 +1,12 @@
 package billing.invoice;
 
-import constants.*;
-import beans.*;
+import beans.Invoice;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import constants.Constants;
 
 import java.io.FileWriter;
 import java.util.Collections;
-
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
 public class InvoiceWriter {
 	public void writeToCsv(Invoice bean) throws Exception {

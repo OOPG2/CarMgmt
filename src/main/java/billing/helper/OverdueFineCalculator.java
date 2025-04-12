@@ -1,6 +1,6 @@
 package billing.helper;
 
-import constants.*;
+import constants.Constants;
 
 public class OverdueFineCalculator {
 	private Long overdueDays;

@@ -1,13 +1,12 @@
 package billing.invoice;
 
-import billing.helper.*;
-import constants.*;
-import objects.*;
-import beans.*;
-
-import com.googlecode.lanterna.gui2.table.Table;
-
 import app.App;
+import beans.Invoice;
+import billing.helper.OverdueFineCalculator;
+import com.googlecode.lanterna.gui2.table.Table;
+import constants.Constants;
+import manager.AuthenticationManager;
+import objects.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,10 +14,12 @@ import java.util.Map.Entry;
 
 public class InvoicesRowPopulator {
 	public void populateInvoices() throws Exception {
+		App app = new App();
+		AuthenticationManager authenticationManager = app.getAuthenticationManager();
 		int daysToDueDate = Constants.getDaysToDueDate();
 		try {
 			new InvoiceRetriever();
-	        User user = App.authenticationManager.getLoggedUser();
+	        User user = authenticationManager.getLoggedUser();
 	        Table<String> toPayTable = InvoiceSelector.toPayTable;
 			Table<String> pastInvoicesTable = InvoiceSelector.pastInvoicesTable;
 	        for(Entry<String, Invoice> invoice:InvoiceRetriever.invoices.entrySet()) {
@@ -45,7 +46,7 @@ public class InvoicesRowPopulator {
 					i.setGST(gst);
 					i.setTotal(totalAmount);
 					toPayTable.getTableModel().addRow(i.getId(), i.getReservationId(), String.format("$%.2f", totalAmount), formattedDueDate);
-				} else {
+				} else if (i.getUserId().equals(user.getUserId().toString()) && i.getStatus().toLowerCase().equals("completed")) {
 					pastInvoicesTable.getTableModel().addRow(i.getId(), i.getReservationId(), "$" + i.getLockedInAmount());
 				}
 			}

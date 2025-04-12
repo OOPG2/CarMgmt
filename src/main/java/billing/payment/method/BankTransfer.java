@@ -1,22 +1,17 @@
 package billing.payment.method;
 
-import app.*;
-import constants.*;
-import beans.*;
-import billing.invoice.*;
-import billing.payment.*;
+import app.App;
+import beans.Invoice;
+import billing.invoice.InvoiceEditor;
+import billing.invoice.InvoiceSelector;
+import billing.invoice.InvoiceViewer;
+import billing.payment.PaymentHistoryRetriever;
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
+import constants.Constants;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 
 public class BankTransfer {
 	public static void showBankTransferForm(Invoice invoice, Double totalPayable) {

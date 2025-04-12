@@ -1,33 +1,30 @@
 package billing.payment.method;
 
-import app.*;
-import constants.*;
-import beans.*;
-
-import billing.invoice.*;
-import billing.payment.*;
+import app.App;
+import beans.Invoice;
+import beans.PaymentHistory;
+import billing.invoice.InvoiceEditor;
+import billing.invoice.InvoiceSelector;
+import billing.invoice.InvoiceViewer;
+import billing.payment.PaymentHistoryRetriever;
+import billing.payment.PaymentHistoryWriter;
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
+import constants.Constants;
+import io.nayuki.qrcodegen.QrCode;
+import manager.AuthenticationManager;
+import objects.Customer;
+import rewards.AddPoints;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
-
-import io.nayuki.qrcodegen.QrCode;
-import objects.Customer;
-import rewards.AddPoints;
-
 public class PayNow {
 	public static void showPayNowForm(Invoice invoice, Double totalPayable) {
+		App app = new App();
+		AuthenticationManager authenticationManager = app.getAuthenticationManager();
 		String invoiceId = invoice.getId();
 		MultiWindowTextGUI gui = App.gui;
 		BasicWindow menuWindow = new BasicWindow(String.format("PayNow Payment"));
@@ -38,7 +35,7 @@ public class PayNow {
         	new InvoiceViewer().showInvoice(invoice);
         });
         panel.addComponent(back);
-        String userId = App.authenticationManager.getLoggedUser().getUserId();
+        String userId = authenticationManager.getLoggedUser().getUserId();
         Button transferred = new Button("Simulate Payment", () -> {
         	LocalDate lockedInDate = LocalDate.now();
         	invoice.setLockedInAmount(String.format("%.2f", totalPayable));
@@ -53,7 +50,7 @@ public class PayNow {
 			try {
 				new PaymentHistoryWriter().writeToCsv(paymentHistory);
 				Integer pointsEarned = (int) Double.parseDouble(invoice.getBaseAmount());
-				Customer customer = (Customer) App.authenticationManager.getLoggedUser();
+				Customer customer = (Customer) authenticationManager.getLoggedUser();
 				AddPoints.addPoints(customer, pointsEarned);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

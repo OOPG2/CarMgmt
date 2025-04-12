@@ -1,19 +1,21 @@
 package menus;
 
-import app.*;
-import manager.*;
-import objects.*;
-import static helper.Flash.flash;
-import static menus.ChangePasswordMenu.showChangePasswordMenu;
-import static menus.LoggedMenu.showLoggedMenu;
-
+import app.App;
+import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
-
-import com.googlecode.lanterna.gui2.*;
+import manager.AuthenticationManager;
+import manager.MenuManager;
+import manager.UserManager;
+import objects.Customer;
+import objects.User;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static helper.Flash.flash;
+import static menus.ChangePasswordMenu.showChangePasswordMenu;
+import static menus.LoggedMenu.showLoggedMenu;
 
 public class ProfileMenu {
 
@@ -109,6 +111,20 @@ public class ProfileMenu {
 
         panel.addComponent(new Label("User ID: "));
         panel.addComponent(userIdLabel.setLayoutData(infoLayout));
+
+        if (loggedUser.getRole().equals("Customer")) {
+            panel.addComponent(new EmptySpace());
+            panel.addComponent(new EmptySpace());
+
+            panel.addComponent(new Label("Lifetime Points: "));
+            panel.addComponent(new Label(Integer.toString(((Customer)loggedUser).getLifetimePoints())).setLayoutData(infoLayout));
+
+            panel.addComponent(new EmptySpace());
+            panel.addComponent(new EmptySpace());
+
+            panel.addComponent(new Label("Loyalty Points: "));
+            panel.addComponent(new Label(Integer.toString(((Customer)loggedUser).getLoyaltyPoints())).setLayoutData(infoLayout));
+        }
 
         panel.addComponent(new EmptySpace());
         panel.addComponent(new EmptySpace());

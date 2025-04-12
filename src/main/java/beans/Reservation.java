@@ -1,61 +1,101 @@
 package beans;
 
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvBindByPosition;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * Model class for a reservation record.
+ * Each reservation has an ID, a userId (who made the reservation), a vehicleId,
+ * a start and end date-time, and a status (e.g., Reserved, PickedUp, Returned, Cancelled).
+ * Uses OpenCSV annotations for CSV binding of fields.
+ */
 public class Reservation extends CsvBeans {
-    @Override
-    public String getId() {
-        return reservation_id;
-    }
+    @CsvBindByName(column = "id")
+    private int id;
 
-    @Override
-    public void setId(String id) {
-        this.reservation_id = id;
-    }
+    @CsvBindByName(column = "userId")
+    private String userId;
 
-    public String[] getAll() {
-        return new String[]{reservation_id,customer_id,vehicle_id,status,start_date,end_date,daily_rental,insurance,customer_notes};
-    }
+    @CsvBindByName(column = "vehicleId")
+    private int vehicleId;
 
-    @CsvBindByPosition(position = 0)
-    private String reservation_id;
+    @CsvBindByName(column = "start")
+    private String start;
 
-    @CsvBindByPosition(position = 1)
-    private String customer_id;
-    @CsvBindByPosition(position = 2)
-    private String vehicle_id;
+    @CsvBindByName(column = "end")
+    private String end;
 
-
-    @CsvBindByPosition(position = 3)
+    @CsvBindByName(column = "status")
     private String status;
 
-    @CsvBindByPosition(position = 4)
-    private String start_date;
-
-    @CsvBindByPosition(position = 5)
-    private String end_date;
-    @CsvBindByPosition(position = 6)
+    @CsvBindByName(column = "daily_rental")
     private String daily_rental;
-    @CsvBindByPosition(position = 7)
+
+    @CsvBindByName(column = "insurance")
     private String insurance;
-    @CsvBindByPosition(position = 8)
-    private String customer_notes;
 
-    public String getReservation_id() {
-        return reservation_id;
+    public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public Reservation() {
+        // No-arg constructor needed for OpenCSV bean binding
     }
 
-    public void setReservation_id(String reservation_id) {
-        this.reservation_id = reservation_id;
+    public Reservation(int id, String userId, int vehicleId, LocalDateTime start, LocalDateTime end, String status, String daily_rental, String insurance) {
+        this.id = id;
+        this.userId = userId;
+        this.vehicleId = vehicleId;
+        this.start = DATETIME_FORMAT.format(start);
+        this.end = DATETIME_FORMAT.format(end);
+        this.status = status;
+        this.daily_rental = daily_rental;
+        this.insurance = insurance;
     }
 
-    public String getCustomer_id() {
-        return customer_id;
+    public String getId() {
+        return String.valueOf(this.id);
     }
 
-    public void setCustomer_id(String customer_id) {
-        this.customer_id = customer_id;
+    public int getReservationID(){
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public int getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(int vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
     }
 
     public String getStatus() {
@@ -66,51 +106,43 @@ public class Reservation extends CsvBeans {
         this.status = status;
     }
 
-    public String getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
-    }
-
-    public String getEnd_date() {
-        return end_date;
-    }
-
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
-    }
-
-    public String getDaily_rental() {
+    public String getDailyRental() {
         return daily_rental;
     }
-
-    public void setDaily_rental(String daily_rental) {
+    public void setDailyRental(String daily_rental) {
         this.daily_rental = daily_rental;
     }
 
-    public String getInsurance() {
-        return insurance;
-    }
-
+    public String getInsurance() { return insurance;};
     public void setInsurance(String insurance) {
         this.insurance = insurance;
     }
 
-    public String getCustomer_notes() {
-        return customer_notes;
+    public LocalDateTime getStartDateTime() {
+        return LocalDate.parse(start, DATETIME_FORMAT).atStartOfDay();
     }
 
-    public void setCustomer_notes(String customer_notes) {
-        this.customer_notes = customer_notes;
+    public LocalDateTime getEndDateTime() {
+        return LocalDate.parse(end, DATETIME_FORMAT).atTime(23,59,59);
     }
 
-    public String getVehicle_id() {
-        return vehicle_id;
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", vehicleId=" + vehicleId +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 
-    public void setVehicle_id(String vehicle_id) {
-        this.vehicle_id = vehicle_id;
+    public String[] getAll() {
+        return new String[]{Integer.toString(id),userId,Integer.toString(vehicleId),status,start,end,daily_rental,insurance};
+    }
+
+    public String[] getTableRow() {
+        return new String[]{Integer.toString(id),userId,Integer.toString(vehicleId),status,start,end};
     }
 }

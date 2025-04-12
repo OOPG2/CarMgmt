@@ -1,7 +1,7 @@
 package repositories;
 
-import constants.*;
-import interfaces.*;
+import constants.Constants;
+import interfaces.UserStorage;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,10 +1,12 @@
 package Reservations;
 
+import beans.Reservation;
+import beans.Vehicle;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
-import objects.*;
+import objects.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,12 +63,12 @@ public class MakeReservationScreen extends BasicWindow {
                         LocalDateTime start = startDate.atStartOfDay();
                         LocalDateTime end = endDate.atStartOfDay();
 
-                        Reservation reservation = manager.createReservation(currentUser, vehicle.getId(), start, end);
+                        Reservation reservation = manager.createReservation(currentUser, vehicle.getVehicleID(), start, end);
                         vehicle.setStatus("Not Available");
                         manager.saveVehicles();
 
                         String confirmation = String.format(
-                                "Reservation Confirmed!\n\nReservation ID: %d\nVehicle: %s %s (%s)\nCost per Day: $%.2f\nRental Dates: %s to %s",
+                                "Reservation Confirmed!\n\nReservation ID: %s\nVehicle: %s %s (%s)\nCost per Day: $%.2f\nRental Dates: %s to %s",
                                 reservation.getId(),
                                 vehicle.getMake(),
                                 vehicle.getModel(),
@@ -85,7 +87,7 @@ public class MakeReservationScreen extends BasicWindow {
                     }
                 });
 
-                confirmPanel.addComponent(new EmptySpace(new TerminalSize(0, 1)));
+                confirmPanel.addComponent(new Button("Back", this::close));
                 confirmPanel.addComponent(confirmButton);
                 this.setComponent(confirmPanel);
             });

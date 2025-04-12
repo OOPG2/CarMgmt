@@ -1,20 +1,11 @@
 package billing.invoice;
 
-import app.*;
-import beans.*;
-
-import exceptions.*;
-import menus.*;
-
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.TextBox;
+import app.App;
+import beans.Invoice;
+import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
+import exceptions.RowNotFoundException;
+import menus.LoggedMenu;
 
 public class InvoiceSearch {
 	public static void showInvoiceSearchForm() {

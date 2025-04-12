@@ -1,13 +1,14 @@
 package menus.postLogin;
 
-import beans.*;
-import app.*;
-import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
-
+import app.VehicleRetriever;
+import app.VehicleWriter;
+import beans.Vehicle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 
 import java.util.regex.Pattern;
+
+import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
 
 public class AddVehicleMenu {
     public static void showAddVehicleMenu(MultiWindowTextGUI gui) {
@@ -86,17 +87,17 @@ public class AddVehicleMenu {
             else {
                 try {
                     vehicle = new Vehicle(
-                            String.valueOf((new VehicleRetriever().getCurrentLastRowId())+1),
+                            new VehicleRetriever().getCurrentLastRowId()+1,
                             brandText.getText(),
                             modelText.getText(),
                             typeText.getText(),
                             carplateText.getText(),
-                            rentalText.getText(),
+                            Double.parseDouble(rentalText.getText()),
                             statusBox.getSelectedItem(),
                             conditionBox.getSelectedItem(),
-                            ageText.getText(),
-                            seatsText.getText(),
-                            mileageText.getText());
+                            Integer.parseInt(ageText.getText()),
+                            Integer.parseInt(seatsText.getText()),
+                            Integer.parseInt(mileageText.getText()));
                     new VehicleWriter().writeToCsv(vehicle);
 //                    hashmap.put(vehicle.getId(), vehicle);
 //                    OutputStream out = new FileOutputStream("databases/vehicles.csv");
@@ -123,7 +124,7 @@ public class AddVehicleMenu {
                 assert vehicle != null;
                 new MessageDialogBuilder()
                         .setTitle("Vehicle Added!")
-                        .setText(vehicle.getBrand() + " " + vehicle.getModel() + " has been added with ID " + vehicle.getVehicle_id())
+                        .setText(vehicle.getMake() + " " + vehicle.getModel() + " has been added with ID " + vehicle.getVehicleID())
                         .build()
                         .showDialog(gui);
                 showAddVehicleMenu(gui);

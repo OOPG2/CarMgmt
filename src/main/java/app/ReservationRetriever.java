@@ -1,6 +1,6 @@
 package app;
 
-import beans.*;
+import beans.Reservation;
 
 import java.util.Collections;
 import java.util.HashMap;

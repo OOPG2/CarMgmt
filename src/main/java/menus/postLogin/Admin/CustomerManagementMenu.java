@@ -1,18 +1,18 @@
 package menus.postLogin.Admin;
 
-import app.*;
-import manager.*;
-import objects.*;
-import static menus.LoggedMenu.showLoggedMenu;
-import static menus.ProfileMenu.showProfileMenu;
-
-
+import app.App;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.table.Table;
+import manager.MenuManager;
+import manager.UserManager;
+import objects.Customer;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static menus.LoggedMenu.showLoggedMenu;
+import static menus.ProfileMenu.showProfileMenu;
 
 public class CustomerManagementMenu {
     public static void showCustomerManagementMenu(MultiWindowTextGUI gui) {

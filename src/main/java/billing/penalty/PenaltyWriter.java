@@ -1,13 +1,12 @@
 package billing.penalty;
 
-import constants.*;
 import beans.Penalty;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import constants.Constants;
 
 import java.io.FileWriter;
 import java.util.Collections;
-
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
 public class PenaltyWriter {
 	public void writeToCsv(Penalty bean) throws Exception {

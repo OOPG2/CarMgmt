@@ -1,10 +1,11 @@
 package Reservations;
 
 
+import beans.Reservation;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import objects.*;
+
 /**
  * Utility class to check a vehicle's availability for a given time range.
  * Ensures no existing reservation for the same vehicle overlaps the desired period.
@@ -24,7 +25,7 @@ public class VehicleAvailabilityChecker {
     public static boolean isVehicleAvailable(int vehicleId, LocalDateTime newStart, LocalDateTime newEnd,
                                              List<Reservation> reservations, Integer excludeResId) {
         for (Reservation res : reservations) {
-            if (excludeResId != null && res.getId() == excludeResId) {
+            if (excludeResId != null && res.getReservationID() == excludeResId) {
                 continue; // Skip the reservation being modified (itself)
             }
             if (res.getVehicleId() != vehicleId) {

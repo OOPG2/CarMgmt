@@ -1,14 +1,14 @@
 package menus.postLogin;
 
-import beans.*;
-import app.*;
-import static menus.postLogin.UpdateVehicleInfoMenu.showUpdateVehicleInfoMenu;
-import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
-
+import app.VehicleRetriever;
+import beans.Vehicle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.table.Table;
 
-import java.util.*;
+import java.util.HashMap;
+
+import static menus.postLogin.UpdateVehicleInfoMenu.showUpdateVehicleInfoMenu;
+import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
 
 public class VehicleFleetMenu {
     static String selectedID = null;
@@ -22,9 +22,9 @@ public class VehicleFleetMenu {
         try {
             HashMap<String, Vehicle> hashmap = new VehicleRetriever().getVehicles();
             hashmap.keySet().stream()
-                            .mapToInt(Integer::valueOf)
-                            .sorted()
-                            .forEach(k-> table.getTableModel().addRow(hashmap.get(String.valueOf(k)).getAll()));
+                    .mapToInt(Integer::valueOf)
+                    .sorted()
+                    .forEach(k-> table.getTableModel().addRow(hashmap.get(String.valueOf(k)).getAll()));
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -35,19 +35,6 @@ public class VehicleFleetMenu {
             window.close();
             showUpdateVehicleInfoMenu(gui);
         });
-//        try {
-//            BufferedReader reader = new BufferedReader(new FileReader("vehicles.csv"));
-//            String line = reader.readLine();
-//            while ((line = reader.readLine()) != null) {
-//                table.getTableModel().addRow(line.split(","));
-//            }
-//
-//            table.setVisibleRows(10);
-//
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
         Button backButton = new Button("Back", () -> {
             window.close();
             showVehicleManagementMenu(gui);

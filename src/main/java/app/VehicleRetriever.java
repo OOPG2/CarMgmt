@@ -1,8 +1,7 @@
 package app;
 
-import beans.*;
+import beans.Vehicle;
 
-import java.util.Collections;
 import java.util.HashMap;
 
 public class VehicleRetriever extends Retriever<Vehicle> {

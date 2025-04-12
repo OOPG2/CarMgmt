@@ -19,7 +19,7 @@ public class Customer extends User {
         };
     }
 
-    public Integer getLifetimePoints() {
+    public int getLifetimePoints() {
         return lifetimePoints;
     }
 

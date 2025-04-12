@@ -2,10 +2,11 @@ package Reservations;
 
 
 
+import beans.Reservation;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
-import objects.*;
+
 /**
  * Screen for updating the status of a reservation (used by staff at pickup or return time).
  * Staff enters a reservation ID:

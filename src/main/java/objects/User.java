@@ -1,6 +1,6 @@
 package objects;
 
-import interfaces.*;
+import interfaces.CSVSerializable;
 
 public abstract class User implements CSVSerializable {
     private String userId;

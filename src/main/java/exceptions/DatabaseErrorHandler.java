@@ -1,8 +1,7 @@
 package exceptions;
 
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
-
 import app.App;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 
 public class DatabaseErrorHandler {
 	public static void showDatabaseErrorDialog() {

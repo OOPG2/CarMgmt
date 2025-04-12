@@ -1,24 +1,14 @@
 package billing.invoice;
 
+import app.App;
+import beans.Penalty;
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.table.Table;
+import constants.PredefinedPenalties;
+
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import app.*;
-import constants.*;
-import beans.*;
-
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.ComboBox;
-import com.googlecode.lanterna.gui2.EmptySpace;
-import com.googlecode.lanterna.gui2.GridLayout;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.Window;
-import com.googlecode.lanterna.gui2.table.Table;
 
 public class PenaltyCreator {
 	public void showPenaltyCreator(Table<String> penaltyTable, List<Penalty> penalties) {

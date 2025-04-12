@@ -1,9 +1,9 @@
 package app;
 
-import beans.*;
-import constants.*;
-import exceptions.*;
-import csvParser.*;
+import beans.CsvBeans;
+import constants.Constants;
+import csvParser.CsvParser;
+import exceptions.RowNotFoundException;
 
 import java.util.HashMap;
 

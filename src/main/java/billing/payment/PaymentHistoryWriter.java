@@ -1,14 +1,12 @@
 package billing.payment;
 
-import constants.*;
-import beans.*;
+import beans.PaymentHistory;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import constants.Constants;
 
 import java.io.FileWriter;
 import java.util.Collections;
-
-
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
 public class PaymentHistoryWriter {
 	public void writeToCsv(PaymentHistory bean) throws Exception {

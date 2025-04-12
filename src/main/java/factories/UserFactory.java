@@ -1,6 +1,6 @@
 package factories;
 
-import objects.*;
+import objects.User;
 
 public interface UserFactory {
     User createUser(String[] userData);

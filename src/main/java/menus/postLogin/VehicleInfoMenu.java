@@ -1,17 +1,15 @@
 package menus.postLogin;
 
-import beans.*;
-import csvParser.*;
-import exceptions.*;
-import app.*;
-import static menus.postLogin.UpdateVehicleInfoMenu.showUpdateVehicleInfoMenu;
-import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
-
+import app.VehicleRetriever;
+import beans.Vehicle;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
+import exceptions.RowNotFoundException;
 
-import java.util.HashMap;
 import java.util.regex.Pattern;
+
+import static menus.postLogin.UpdateVehicleInfoMenu.showUpdateVehicleInfoMenu;
+import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
 
 public class VehicleInfoMenu {
     static String displayedID = null;
@@ -53,23 +51,23 @@ public class VehicleInfoMenu {
                 VehicleRetriever vehicleRetriever = new VehicleRetriever();
                 try {
                     Vehicle info = vehicleRetriever.retrieveById(vehicleID);
-                    brand.setText("Brand: " + info.getBrand());
+                    brand.setText("Brand: " + info.getMake());
                     model.setText("Model: " + info.getModel());
                     type.setText("Type: " + info.getType());
-                    carplate.setText("Car Plate: " + info.getCar_plate());
-                    rental.setText("Rental: " + info.getDaily_rental());
+                    carplate.setText("Car Plate: " + info.getPlate());
+                    rental.setText("Rental: " + info.getRentalCost());
                     status.setText("Status: " + info.getStatus());
                     condition.setText("Condition: " + info.getCondition());
-                    age.setText("Age: " + info.getAge());
+                    age.setText("Age: " + info.getYearsUsed());
                     seats.setText("Seats: " + info.getSeats());
                     mileage.setText("Mileage: " + info.getMileage());
                     displayedID = vehicleID;
                 }catch(RowNotFoundException e) {
                     new MessageDialogBuilder()
-                    .setTitle("No Vehicle Found!")
-                    .setText("There is no vehicle with the specified ID")
-                    .build()
-                    .showDialog(gui);
+                            .setTitle("No Vehicle Found!")
+                            .setText("There is no vehicle with the specified ID")
+                            .build()
+                            .showDialog(gui);
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block

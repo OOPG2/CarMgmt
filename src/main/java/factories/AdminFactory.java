@@ -1,6 +1,7 @@
 package factories;
 
-import objects.*;
+import objects.Admin;
+import objects.User;
 
 public class AdminFactory implements UserFactory {
     @Override

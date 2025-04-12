@@ -1,9 +1,7 @@
 package menus.postLogin;
 
-import beans.*;
-import app.*;
-import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
-
+import app.ReservationRetriever;
+import beans.Reservation;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.table.Table;
@@ -11,6 +9,8 @@ import com.googlecode.lanterna.gui2.table.Table;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
+
+import static menus.postLogin.VehicleManagementMenu.showVehicleManagementMenu;
 
 public class VehicleBookingMenu {
     public static void showVehicleBookingMenu(MultiWindowTextGUI gui) {
@@ -26,7 +26,7 @@ public class VehicleBookingMenu {
         panel1.addComponent(textBox);
         mainPanel.addComponent(panel1);
 
-        Table<String> table =new Table<>("Reservation ID","Customer ID","Vehicle ID","Status","Start Date","End Date","Daily Rental","Insurance Fee","Notes");
+        Table<String> table =new Table<>("Reservation ID","Customer ID","Vehicle ID","Status","Start Date","End Date","Daily Rental","Insurance Fee");
         try {
             HashMap<String, Reservation> hashmap = new ReservationRetriever().getReservations();
             hashmap.keySet().stream()
@@ -73,7 +73,7 @@ public class VehicleBookingMenu {
                 try {
                     HashMap<String, Reservation> hashmap = new ReservationRetriever().getReservations();
                     hashmap.keySet().stream()
-                            .filter(k -> vehicleID.equals(hashmap.get(k).getVehicle_id()))
+                            .filter(k -> vehicleID.equals(Integer.toString(hashmap.get(k).getVehicleId())))
                             .mapToInt(Integer::valueOf)
                             .sorted()
                             .forEach(k -> info.add(hashmap.get(String.valueOf(k))));

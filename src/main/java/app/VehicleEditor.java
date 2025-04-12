@@ -1,16 +1,13 @@
 package app;
 
-import beans.*;
-import constants.*;
-
+import beans.Vehicle;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import constants.Constants;
 
 import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class VehicleEditor {
     public static void modifyRowInCsv(String id, Vehicle vehicle) {

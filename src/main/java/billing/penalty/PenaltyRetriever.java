@@ -1,6 +1,6 @@
 package billing.penalty;
 
-import app.*;
+import app.Retriever;
 import beans.Penalty;
 
 import java.util.Collections;

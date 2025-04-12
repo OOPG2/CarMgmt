@@ -1,9 +1,12 @@
 package Reservations;
 
-import com.googlecode.lanterna.gui2.*;
+import beans.Reservation;
+import beans.Vehicle;
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.gui2.*;
+import objects.User;
+
 import java.util.List;
-import objects.*;
 /**
  * Screen for viewing reservations.
  * - Customers see only their own reservations.

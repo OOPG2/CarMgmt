@@ -3,10 +3,10 @@
 3,Suzuki,Swift,Hatchback,ABC0003C,110.0,Not Available,Dented,1,5,23768
 4,Volkswagen,Golf,Hatchback,ABC0004D,70.0,Not Available,Good,5,5,97127
 5,Suzuki,Swift,Hatchback,ABC0005E,80.0,Not Available,Good,4,5,77258
-6,Volkswagen,Golf,Hatchback,ABC0006F,60.0,Available,Good,6,5,106787
+6,Volkswagen,Golf,Hatchback,ABC0006F,60.0,Not Available,Good,6,5,106787
 7,Suzuki,Swift,Hatchback,ABC0007G,50.0,Not Available,Good,7,5,126144
 8,Volkswagen,Golf,Hatchback,ABC0008H,70.0,Available,Good,5,5,94876
-9,Suzuki,Swift,Hatchback,ABC0009J,50.0,Available,Good,7,5,130674
+9,Suzuki,Swift,Hatchback,ABC0009J,50.0,Not Available,Good,7,5,130674
 10,Volkswagen,Golf,Hatchback,ABC0010K,70.0,Available,Good,5,5,94553
 11,Toyota,Sienta,MPV,ABC0011A,100.0,Available,Good,3,7,56489
 12,Honda,Freed,MPV,ABC0012B,100.0,Available,Good,3,7,53225
