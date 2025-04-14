@@ -39,7 +39,7 @@ public class PaymentHistoryListing {
         User loggedUser = authenticationManager.getLoggedUser();
 	    String userId = loggedUser.getUserId();
 	    paymentHistories.stream()
-	    .filter(h -> h.getId().equals(userId))
+	    .filter(h -> h.getUserId().equals(userId))
 	    .forEach(h -> {
 	    	historyListingPanel.addComponent(new Label(h.getInvoiceId()));
 	    	historyListingPanel.addComponent(new Label("$" + h.getInvoiceAmount()));
